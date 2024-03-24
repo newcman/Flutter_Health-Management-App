@@ -28,7 +28,7 @@ class _SleepScreenState extends State<SleepScreen> {
   int _selectedTimeInt = 7;
   int _selectedTimeFloat = 0;
 
-  TextEditingController _voiceInputController;
+  TextEditingController? _voiceInputController;
   String _voiceInput = '';
 
   List checkBS(String text) {
@@ -38,7 +38,7 @@ class _SleepScreenState extends State<SleepScreen> {
       RegExp c = new RegExp(r'([0-9]{1,2}?)+(\.[0-9]{1,2})');
       Iterable<Match> matches = c.allMatches(text);
       for (Match m in matches) {
-        double match = double.parse(m[0]);
+        double match = double.parse(m?[0] ?? "0");
         bsData.add(match);
       }
     } else if (text.contains("后")) {
@@ -46,7 +46,7 @@ class _SleepScreenState extends State<SleepScreen> {
       RegExp c = new RegExp(r'([0-9]{1,2}?)+(\.[0-9]{1,2})');
       Iterable<Match> matches = c.allMatches(text);
       for (Match m in matches) {
-        double match = double.parse(m[0]);
+        double match = double.parse(m?[0] ?? "0");
         bsData.add(match);
       }
     }
@@ -72,7 +72,7 @@ class _SleepScreenState extends State<SleepScreen> {
     );
   }
 
-  Quality selectedState;
+  Quality? selectedState;
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -368,7 +368,7 @@ class _SleepScreenState extends State<SleepScreen> {
                             "${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
                         SleepDB sleepDB = SleepDB(
                           sleep: sleepTime,
-                          state: selectedState.index,
+                          state: selectedState?.index ?? 0,
                           date: time,
                         );
                         SleepDataBaseProvider.db.insert(sleepDB);
@@ -376,7 +376,7 @@ class _SleepScreenState extends State<SleepScreen> {
                             context,
                             CupertinoPageRoute(
                                 builder: (context) => SleepResultScreen(
-                                    sleep: sleepTime, state: selectedState.index)));
+                                    sleep: sleepTime, state: selectedState?.index ?? 0)));
                       } else {
                         return showDialog<void>(
                             context: context,

@@ -56,54 +56,54 @@ class _BPLineChartState extends State<BPLineChart> {
             if (snapshot.hasData) {
               int showLength = 0;
               int addLength = 0;
-              if ((snapshot.data[0].length - segmentedControlGroupValue) > 0) {
+              if ((snapshot.data?[0].length - segmentedControlGroupValue) > 0) {
                 showLength =
-                    snapshot.data[0].length - segmentedControlGroupValue;
+                    snapshot.data?[0].length - segmentedControlGroupValue;
                 addLength = segmentedControlGroupValue;
               } else {
-                addLength = snapshot.data[0].length;
+                addLength = snapshot.data?[0].length;
               }
-              if (snapshot.data[0].length >= 10) {
+              if (snapshot.data?[0].length >= 10) {
                 sbpSpotsData.clear();
                 dbpSpotsData.clear();
                 sbpAll = 0;
                 dbpAll = 0;
                 for (int x = 0; x < addLength; x++) {
                   // 获取最大值和最小值
-                  if (snapshot.data[0][x + showLength] > max) {
-                    max = snapshot.data[0][x + showLength];
-                  } else if (snapshot.data[1][x + showLength] < min) {
-                    min = snapshot.data[1][x + showLength];
+                  if (snapshot.data?[0][x + showLength] > max) {
+                    max = snapshot.data?[0][x + showLength];
+                  } else if (snapshot.data?[1][x + showLength] < min) {
+                    min = snapshot.data?[1][x + showLength];
                   }
                   sbpSpotsData.add(FlSpot(x.toDouble(),
-                      snapshot.data[0][x + showLength].toDouble()));
+                      snapshot.data?[0][x + showLength].toDouble()));
                   // 加上最近十次的高压
-                  sbpAll += snapshot.data[0][x + showLength].toDouble();
+                  sbpAll += snapshot.data?[0][x + showLength].toDouble();
                   dbpSpotsData.add(FlSpot(x.toDouble(),
-                      snapshot.data[1][x + showLength].toDouble()));
+                      snapshot.data?[1][x + showLength].toDouble()));
                   // 加上最近十次的低压
-                  dbpAll += snapshot.data[1][x + showLength].toDouble();
+                  dbpAll += snapshot.data?[1][x + showLength].toDouble();
                 }
                 sbpAvg = sbpAll / addLength;
                 dbpAvg = dbpAll / addLength;
               } else {
                 if (sbpSpotsData.isEmpty && dbpSpotsData.isEmpty) {
-                  for (int x = 0; x < snapshot.data[0].length; x++) {
+                  for (int x = 0; x < snapshot.data?[0].length; x++) {
                     //获取最大值和最小值
-                    if (snapshot.data[0][x] > max) {
-                      max = snapshot.data[0][x];
-                    } else if (snapshot.data[1][x] < min) {
-                      min = snapshot.data[1][x];
+                    if (snapshot.data?[0][x] > max) {
+                      max = snapshot.data?[0][x];
+                    } else if (snapshot.data?[1][x] < min) {
+                      min = snapshot.data?[1][x];
                     }
                     sbpSpotsData.add(
-                        (FlSpot(x.toDouble(), snapshot.data[0][x].toDouble())));
-                    sbpAll += snapshot.data[0][x].toDouble();
+                        (FlSpot(x.toDouble(), snapshot.data?[0][x].toDouble())));
+                    sbpAll += snapshot.data?[0][x].toDouble();
                     dbpSpotsData.add(
-                        (FlSpot(x.toDouble(), snapshot.data[1][x].toDouble())));
-                    dbpAll += snapshot.data[1][x].toDouble();
+                        (FlSpot(x.toDouble(), snapshot.data?[1][x].toDouble())));
+                    dbpAll += snapshot.data?[1][x].toDouble();
                   }
-                  sbpAvg = sbpAll / snapshot.data[0].length;
-                  dbpAvg = dbpAll / snapshot.data[1].length;
+                  sbpAvg = sbpAll / snapshot.data?[0].length;
+                  dbpAvg = dbpAll / snapshot.data?[1].length;
                 }
               }
               return Container(
@@ -149,9 +149,9 @@ class _BPLineChartState extends State<BPLineChart> {
                                     color: CupertinoColors.systemGrey),
                               )
                             },
-                            onValueChanged: (i) {
+                            onValueChanged: (int? i) {
                               setState(() {
-                                segmentedControlGroupValue = i;
+                                segmentedControlGroupValue = i!!;
                               });
                             }),
                         const SizedBox(

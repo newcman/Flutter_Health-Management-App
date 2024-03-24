@@ -28,7 +28,7 @@ class _BloodSugarState extends State<BloodSugar> {
   int _selectedGluInt = 4;
   int _selectedGluFloat = 0;
 
-  TextEditingController _voiceInputController;
+  TextEditingController? _voiceInputController;
   String _voiceInput = '';
 
   List checkBS(String text) {
@@ -38,7 +38,7 @@ class _BloodSugarState extends State<BloodSugar> {
       RegExp c = new RegExp(r'([0-9]{1,2}?)+(\.[0-9]{1,2})');
       Iterable<Match> matches = c.allMatches(text);
       for (Match m in matches) {
-        double match = double.parse(m[0]);
+        double match = double.parse(m?[0] ?? "0");
         bsData.add(match);
       }
     } else if (text.contains("后")) {
@@ -46,7 +46,7 @@ class _BloodSugarState extends State<BloodSugar> {
       RegExp c = new RegExp(r'([0-9]{1,2}?)+(\.[0-9]{1,2})');
       Iterable<Match> matches = c.allMatches(text);
       for (Match m in matches) {
-        double match = double.parse(m[0]);
+        double match = double.parse(m?[0] ?? "0");
         bsData.add(match);
       }
     }
@@ -72,7 +72,7 @@ class _BloodSugarState extends State<BloodSugar> {
     );
   }
 
-  Meal selectedMeal;
+  Meal? selectedMeal;
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -370,7 +370,7 @@ class _BloodSugarState extends State<BloodSugar> {
                             "${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
                         BloodSugarDB bloodSugarDB = BloodSugarDB(
                           glu: glU,
-                          state: selectedMeal.index,
+                          state: selectedMeal?.index ?? 0,
                           date: time,
                         );
                         BsDataBaseProvider.db.insert(bloodSugarDB);
@@ -378,7 +378,7 @@ class _BloodSugarState extends State<BloodSugar> {
                             context,
                             CupertinoPageRoute(
                                 builder: (context) => BSResultScreen(
-                                    glu: glU, state: selectedMeal.index)));
+                                    glu: glU, state: selectedMeal?.index ?? 0)));
                       } else {
                         return showDialog<void>(
                             context: context,

@@ -5,10 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:bp_notepad/components/constants.dart';
 import 'package:bp_notepad/components/resusableCard.dart';
 
-TextStyle selectedStyle;
+TextStyle? selectedStyle;
 
 class BMIResultScreen extends StatefulWidget {
-  BMIResultScreen({this.bmiResult, this.brResult});
+  BMIResultScreen({required this.bmiResult, required this.brResult});
 
   final double bmiResult;
   final double brResult;
@@ -18,7 +18,7 @@ class BMIResultScreen extends StatefulWidget {
 }
 
 class _BMIResultScreenState extends State<BMIResultScreen> {
-  String resultText;
+  String resultText = "";
 
   @override
   Widget build(BuildContext context) {

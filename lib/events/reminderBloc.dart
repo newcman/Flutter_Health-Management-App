@@ -4,6 +4,9 @@ import 'package:bp_notepad/models/alarmModel.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ReminderBloc extends Bloc<ReminderEvent, List<AlarmDB>> {
+  ReminderBloc(List<AlarmDB> initialState) : super(initialState);
+
+
   // 初始化一个AlarmDB列表
   @override
   List<AlarmDB> get initialState => [];

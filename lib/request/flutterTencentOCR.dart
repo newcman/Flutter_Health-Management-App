@@ -19,14 +19,14 @@ class FlutterTencentOcr {
     String secretKey,
     String action,
     requestDataJson, {
-    JsonParse<T> jsonParse,
+    JsonParse<T>? jsonParse,
     String service = "ocr",
     String host = "ocr.tencentcloudapi.com",
     String algorithm = "TC3-HMAC-SHA256",
     String contentType = "application/json; charset=utf-8",
     String version = "2018-11-19",
     String region = "ap-guangzhou",
-    String findProxy,
+    String? findProxy,
   }) async {
     DateTime nowTime = DateTime.now();
     String date =
@@ -138,15 +138,15 @@ class FlutterTencentOcr {
           ),
           data: payloadJson);
 
-      if (response.data["Response"] != null) {
+      if (response.data?["Response"] != null) {
         if (jsonParse != null) {
-          return jsonParse(response.data["Response"]);
+          return jsonParse(response.data?["Response"]);
         } else {
-          return response.data["Response"];
+          return response.data?["Response"];
         }
       } else {
         throw (Future.error(
-            DioError(error: "腾讯OCR数据下发格式异常", requestOptions: null)));
+            DioError(error: "腾讯OCR数据下发格式异常", requestOptions: RequestOptions(path: ""))));
       }
     } on DioError catch (e) {
       throw (Future.error(e));

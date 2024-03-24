@@ -24,7 +24,7 @@ class BmiScreen extends StatefulWidget {
 }
 
 class _BmiScreenState extends State<BmiScreen> {
-  Gender selectedGender;
+  Gender selectedGender = Gender.male;
   int _selectedHeight = 160;
   int _selectedWeightInt = 50;
   int _selectedWeightFloat = 0;

@@ -22,7 +22,7 @@ class _BloodPressureState extends State<BloodPressure> {
   int dbPressure = 75; //低压
   int heartRate = 60;
 
-  TextEditingController _voiceInputController;
+  TextEditingController? _voiceInputController;
   String _voiceInput = '';
 
   _pressureWarningDialog(BuildContext context) {
@@ -77,7 +77,7 @@ class _BloodPressureState extends State<BloodPressure> {
     RegExp regExp = new RegExp(r'([0-9]{3}|[0-9]{2})');
     Iterable<Match> matches = regExp.allMatches(text);
     for (Match m in matches) {
-      int match = int.parse(m[0]);
+      int match = int.parse(m?[0] ?? "");
       bpData.add(match);
     }
     if (bpData.isEmpty) {

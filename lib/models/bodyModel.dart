@@ -2,14 +2,15 @@
 import 'package:bp_notepad/db/body_databaseProvider.dart';
 
 class BodyDB {
-  int id;
+  int? id;
   int gender;
   double bmi;
   double bf;
   double weight;
   String date;
 
-  BodyDB({this.gender, this.weight, this.bmi, this.bf, this.date});
+  BodyDB(
+      {this.id, required this.gender, required this.weight, required this.bmi, required this.bf, required this.date});
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
@@ -26,12 +27,12 @@ class BodyDB {
     return map;
   }
 
-  BodyDB.fromMap(Map<String, dynamic> map) {
-    id = map[BodyDataBaseProvider.COLUMN_ID];
-    date = map[BodyDataBaseProvider.COLUMN_TIME];
-    bmi = map[BodyDataBaseProvider.COLUMN_BMI];
-    bf = map[BodyDataBaseProvider.COLUMN_BF];
-    weight = map[BodyDataBaseProvider.COLUMN_WEIGHT];
-    gender = map[BodyDataBaseProvider.COLUMN_GENDER];
+  static fromMap(Map<String, dynamic> map) {
+    return BodyDB(id: map[BodyDataBaseProvider.COLUMN_ID],
+        date: map[BodyDataBaseProvider.COLUMN_TIME],
+        bmi: map[BodyDataBaseProvider.COLUMN_BMI],
+        bf: map[BodyDataBaseProvider.COLUMN_BF],
+        weight: map[BodyDataBaseProvider.COLUMN_WEIGHT],
+        gender: map[BodyDataBaseProvider.COLUMN_GENDER]);
   }
 }

@@ -12,7 +12,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:async/async.dart';
 
 class HistoryScreen extends StatefulWidget {
-  HistoryScreen({Key key}) : super(key: key);
+  HistoryScreen({Key? key}) : super(key: key);
   @override
   _HistoryScreenState createState() => _HistoryScreenState();
 }
@@ -21,13 +21,13 @@ class _HistoryScreenState extends State<HistoryScreen>
     with TickerProviderStateMixin {
   Map<DateTime, List> _events = {};
   final _selectedDay = DateTime.now();
-  List _selectedEvents;
-  AnimationController _animationController;
-  CalendarController _calendarController;
-  AsyncMemoizer _memoizer;
+  List? _selectedEvents;
+  AnimationController? _animationController;
+  // CalendarController? _calendarController;
+  AsyncMemoizer? _memoizer;
 
   getDatabaseEvent() async {
-    return this._memoizer.runOnce(() async {
+    return this._memoizer!.runOnce(() async {
       Future<List> bpEvents = BpDataBaseProvider.db.getData();
       Future<List> bsEvents = BsDataBaseProvider.db.getData();
       Future<List> bmiEvents = BodyDataBaseProvider.db.getData();
@@ -124,20 +124,20 @@ class _HistoryScreenState extends State<HistoryScreen>
 
     _selectedEvents = _events[_selectedDay] ?? [];
 
-    _calendarController = CalendarController();
+    // _calendarController = CalendarController();
 
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
     );
 
-    _animationController.forward();
+    _animationController?.forward();
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
-    _calendarController.dispose();
+    _animationController?.dispose();
+    // _calendarController.dispose();
     super.dispose();
   }
 
@@ -179,87 +179,90 @@ class _HistoryScreenState extends State<HistoryScreen>
                     children: <Widget>[
                       TableCalendar(
                         locale: 'zh_CN',
-                        calendarController: _calendarController,
-                        events: snapshot.data,
-                        initialCalendarFormat: CalendarFormat.month,
-                        formatAnimation: FormatAnimation.slide,
-                        startingDayOfWeek: StartingDayOfWeek.sunday,
-                        availableGestures: AvailableGestures.all,
-                        availableCalendarFormats: const {
-                          CalendarFormat.month: '',
-                          CalendarFormat.week: '',
-                        },
-                        calendarStyle: CalendarStyle(
-                          selectedColor: CupertinoColors.systemRed,
-                          todayColor: Colors.red[200],
-                          outsideDaysVisible: false,
-                          weekdayStyle: TextStyle().copyWith(
-                              color: CupertinoDynamicColor.resolve(
-                                  textColor, context)),
-                          eventDayStyle: TextStyle().copyWith(
-                              color: CupertinoDynamicColor.resolve(
-                                  textColor, context)),
-                          weekendStyle: TextStyle()
-                              .copyWith(color: CupertinoColors.systemGrey),
-                          holidayStyle: TextStyle()
-                              .copyWith(color: CupertinoColors.systemBlue),
-                        ),
-                        daysOfWeekStyle: DaysOfWeekStyle(
-                          weekendStyle: TextStyle()
-                              .copyWith(color: CupertinoColors.systemBlue),
-                        ),
-                        headerStyle: HeaderStyle(
-                          titleTextStyle: TextStyle().copyWith(
-                              fontSize: 16,
-                              color: CupertinoDynamicColor.resolve(
-                                  textColor, context)),
-                          centerHeaderTitle: true,
-                          formatButtonVisible: false,
-                        ),
-                        builders: CalendarBuilders(
-                          markersBuilder: (context, date, events, holidays) {
-                            final children = <Widget>[];
-                            if (events.isNotEmpty) {
-                              children.add(
-                                Positioned(
-                                    right: 1,
-                                    bottom: 1,
-                                    child: AnimatedContainer(
-                                      duration:
-                                          const Duration(milliseconds: 300),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: _calendarController
-                                                .isSelected(date)
-                                            ? CupertinoColors.systemRed
-                                            : _calendarController.isToday(date)
-                                                ? Colors.red[200]
-                                                : CupertinoColors.activeBlue,
-                                      ),
-                                      width: 20.0,
-                                      height: 20.0,
-                                      child: Center(
-                                        child: Text(
-                                          '${events.length}',
-                                          style: TextStyle().copyWith(
-                                            color: Colors.white,
-                                            fontSize: 12.0,
-                                          ),
-                                        ),
-                                      ),
-                                    )),
-                              );
-                            }
-                            return children;
-                          },
-                        ),
-                        onDaySelected: (date, events, holidays) {
-                          _onDaySelected(date, events, holidays);
-                          _animationController.forward(from: 0.0);
-                        },
-                        onVisibleDaysChanged: _onVisibleDaysChanged,
-                        onCalendarCreated: _onCalendarCreated,
-                      ),
+                        // calendarController: _calendarController,
+                        // events: snapshot.data,
+                        // initialCalendarFormat: CalendarFormat.month,
+                        // formatAnimation: FormatAnimation.slide,
+                        focusedDay: DateTime.now(),
+                        firstDay: DateTime(2020, 9, 7, 17, 30),
+                        lastDay:DateTime(2020, 9, 7, 17, 30)),
+                        // startingDayOfWeek: StartingDayOfWeek.sunday,
+                        // availableGestures: AvailableGestures.all,
+                        // availableCalendarFormats: const {
+                        //   CalendarFormat.month: '',
+                        //   CalendarFormat.week: '',
+                        // },
+                        // calendarStyle: CalendarStyle(
+                        //   selectedColor: CupertinoColors.systemRed,
+                        //   todayColor: Colors.red[200],
+                        //   outsideDaysVisible: false,
+                        //   weekdayStyle: TextStyle().copyWith(
+                        //       color: CupertinoDynamicColor.resolve(
+                        //           textColor, context)),
+                        //   eventDayStyle: TextStyle().copyWith(
+                        //       color: CupertinoDynamicColor.resolve(
+                        //           textColor, context)),
+                        //   weekendStyle: TextStyle()
+                        //       .copyWith(color: CupertinoColors.systemGrey),
+                        //   holidayStyle: TextStyle()
+                        //       .copyWith(color: CupertinoColors.systemBlue),
+                        // ),
+                        // daysOfWeekStyle: DaysOfWeekStyle(
+                        //   weekendStyle: TextStyle()
+                        //       .copyWith(color: CupertinoColors.systemBlue),
+                        // ),
+                        // headerStyle: HeaderStyle(
+                        //   titleTextStyle: TextStyle().copyWith(
+                        //       fontSize: 16,
+                        //       color: CupertinoDynamicColor.resolve(
+                        //           textColor, context)),
+                        //   centerHeaderTitle: true,
+                        //   formatButtonVisible: false,
+                        // ),
+                      //   builders: CalendarBuilders(
+                      //     markersBuilder: (context, date, events, holidays) {
+                      //       final children = <Widget>[];
+                      //       if (events.isNotEmpty) {
+                      //         children.add(
+                      //           Positioned(
+                      //               right: 1,
+                      //               bottom: 1,
+                      //               child: AnimatedContainer(
+                      //                 duration:
+                      //                     const Duration(milliseconds: 300),
+                      //                 decoration: BoxDecoration(
+                      //                   shape: BoxShape.circle,
+                      //                   color: _calendarController
+                      //                           .isSelected(date)
+                      //                       ? CupertinoColors.systemRed
+                      //                       : _calendarController.isToday(date)
+                      //                           ? Colors.red[200]
+                      //                           : CupertinoColors.activeBlue,
+                      //                 ),
+                      //                 width: 20.0,
+                      //                 height: 20.0,
+                      //                 child: Center(
+                      //                   child: Text(
+                      //                     '${events.length}',
+                      //                     style: TextStyle().copyWith(
+                      //                       color: Colors.white,
+                      //                       fontSize: 12.0,
+                      //                     ),
+                      //                   ),
+                      //                 ),
+                      //               )),
+                      //         );
+                      //       }
+                      //       return children;
+                      //     },
+                      //   ),
+                      //   onDaySelected: (date, events, holidays) {
+                      //     _onDaySelected(date, events, holidays);
+                      //     _animationController.forward(from: 0.0);
+                      //   },
+                      //   onVisibleDaysChanged: _onVisibleDaysChanged,
+                      //   onCalendarCreated: _onCalendarCreated,
+                      // ),
                       const SizedBox(height: 8.0),
                       Expanded(
                           child: MediaQuery.removePadding(
@@ -267,7 +270,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                               context: context,
                               child: Container(
                                   child: ListView(
-                                children: _selectedEvents
+                                children: _selectedEvents!
                                     .map((event) => Container(
                                           child: Column(
                                             children: <Widget>[

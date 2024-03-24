@@ -21,7 +21,7 @@ class OCRDetect extends StatefulWidget {
 }
 
 class _OCRDetectState extends State<OCRDetect> {
-  File _image;
+  File? _image;
   final _picker = ImagePicker();
   bool _isInAsyncCall = false;
   bool isFound = false;
@@ -29,8 +29,8 @@ class _OCRDetectState extends State<OCRDetect> {
   String _medicineTitle = '';
   String _medicineUsage = '';
   String _medicineDosage = '';
-  TextEditingController _medicineInputController;
-  String _medicineInput;
+  TextEditingController? _medicineInputController;
+  String _medicineInput = "";
   List<Map<String, dynamic>> result = [];
 
   Future _imageFromGallery() async {
@@ -108,7 +108,7 @@ class _OCRDetectState extends State<OCRDetect> {
                                           backGroundColor, context),
                                     ),
                                   )
-                                : Image.file(_image)),
+                                : Image.file(_image!!)),
                         Container(
                           child: Column(
                             children: <Widget>[
@@ -337,7 +337,7 @@ class _OCRDetectState extends State<OCRDetect> {
   }
 
   Future generalOCR() async {
-    final ByteData imageBytes = await rootBundle.load(_image.path);
+    final ByteData imageBytes = await rootBundle.load(_image?.path ?? "");
 
     Map map = {"ImageBase64": base64Encode(imageBytes.buffer.asUint8List())};
 

@@ -2,12 +2,12 @@
 import 'package:bp_notepad/db/sleep_databaseProvider.dart';
 
 class SleepDB {
-  int id;
+  int? id;
   double sleep;
   int state;
   String date;
 
-  SleepDB({this.id, this.sleep, this.state, this.date});
+  SleepDB({this.id, required this.sleep, required this.state, required this.date});
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
@@ -22,10 +22,10 @@ class SleepDB {
     return map;
   }
 
-  SleepDB.fromMap(Map<String, dynamic> map) {
-    id = map[SleepDataBaseProvider.COLUMN_ID];
-    sleep = map[SleepDataBaseProvider.COLUMN_SLEEP];
-    state = map[SleepDataBaseProvider.COLUMN_STATE];
-    date = map[SleepDataBaseProvider.COLUMN_TIME];
+  static fromMap(Map<String, dynamic> map) {
+    return SleepDB(id : map[SleepDataBaseProvider.COLUMN_ID],
+        sleep : map[SleepDataBaseProvider.COLUMN_SLEEP],
+        state : map[SleepDataBaseProvider.COLUMN_STATE],
+        date : map[SleepDataBaseProvider.COLUMN_TIME]);
   }
 }

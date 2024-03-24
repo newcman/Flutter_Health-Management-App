@@ -6,20 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:bp_notepad/components/constants.dart';
 import 'package:bp_notepad/components/lineChart1.dart';
 
-TextStyle selectedStyle;
+TextStyle? selectedStyle;
 
 class BPResultScreen extends StatefulWidget {
   final int sbp;
   final int dbp;
   final int pulse;
-  BPResultScreen({this.sbp, this.dbp, this.pulse});
+  BPResultScreen({required this.sbp, required this.dbp, required this.pulse});
 
   @override
   _BPResultScreenState createState() => _BPResultScreenState();
 }
 
 class _BPResultScreenState extends State<BPResultScreen> {
-  String resultText;
+  String resultText = "";
 
   Widget build(BuildContext context) {
     var deviceData = MediaQuery.of(context);

@@ -6,27 +6,21 @@ abstract class ReminderEvent {}
 
 // 初始化提醒列表
 class SetAlarms extends ReminderEvent {
-  List<AlarmDB> alarmList;
+  final List<AlarmDB> alarmList;
 
-  SetAlarms(List<AlarmDB> alarms) {
-    alarmList = alarms;
-  }
+  SetAlarms(this.alarmList);
 }
 
 // 删除提醒
 class DeleteAlarm extends ReminderEvent {
   int alarmIndex;
 
-  DeleteAlarm(int index) {
-    alarmIndex = index;
-  }
+  DeleteAlarm(this.alarmIndex);
 }
 
 // 增加提醒
 class AddAlarm extends ReminderEvent {
   AlarmDB newAlarm;
 
-  AddAlarm(AlarmDB alarm) {
-    newAlarm = alarm;
-  }
+  AddAlarm(this.newAlarm);
 }

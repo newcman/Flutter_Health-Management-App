@@ -58,44 +58,45 @@ class _BmiLineChartState extends State<BmiLineChart> {
             if (snapshot.hasData) {
               int showLength = 0;
               int addLength = 0;
-              if (snapshot.data.length - segmentedControlGroupValue > 0) {
-                showLength = snapshot.data.length - segmentedControlGroupValue;
+              int length = snapshot.data?.length ?? 0;
+              if (length - segmentedControlGroupValue > 0) {
+                showLength = length - segmentedControlGroupValue;
                 addLength = segmentedControlGroupValue;
               } else {
-                addLength = snapshot.data.length;
+                addLength = length;
               }
-              if (snapshot.data.length >= 10) {
+              if (length >= 10) {
                 //可以完整显示最近的十条记录
                 spotDatas.clear();
                 addAll = 0;
                 for (int x = 0; x < addLength; x++) {
                   //获取最大值和最小值
-                  if (snapshot.data[x + showLength] > max) {
-                    max = snapshot.data[x + showLength];
-                  } else if (snapshot.data[x + showLength] < min) {
-                    min = snapshot.data[x + showLength];
+                  if (snapshot.data?[x + showLength] > max) {
+                    max = snapshot.data?[x + showLength];
+                  } else if (snapshot.data?[x + showLength] < min) {
+                    min = snapshot.data?[x + showLength];
                   }
                   //添加数值到spotData
                   spotDatas
-                      .add(FlSpot(x.toDouble(), snapshot.data[x + showLength]));
-                  addAll += snapshot.data[x + showLength];
+                      .add(FlSpot(x.toDouble(), snapshot.data?[x + showLength]));
+                  addAll += snapshot.data?[x + showLength];
                 }
                 avg = addAll / addLength;
               } else {
                 //不能完整显示最近的十条记录
                 if (spotDatas.isEmpty)
-                  for (int x = 0; x < snapshot.data.length; x++) {
+                  for (int x = 0; x < length; x++) {
                     //获取最大值和最小值
-                    if (snapshot.data[x] > max) {
-                      max = snapshot.data[x];
-                    } else if (snapshot.data[x] < min) {
-                      min = snapshot.data[x];
+                    if (snapshot.data?[x] > max) {
+                      max = snapshot.data?[x];
+                    } else if (snapshot.data?[x] < min) {
+                      min = snapshot.data?[x];
                     }
                     //添加数值到spotData
-                    spotDatas.add((FlSpot(x.toDouble(), snapshot.data[x])));
-                    addAll += snapshot.data[x];
+                    spotDatas.add((FlSpot(x.toDouble(), snapshot.data?[x])));
+                    addAll += snapshot.data?[x];
                   }
-                avg = addAll / snapshot.data.length;
+                avg = addAll / length;
               }
               return Container(
                   decoration: const BoxDecoration(
@@ -131,9 +132,9 @@ class _BmiLineChartState extends State<BmiLineChart> {
                                     color: CupertinoColors.systemGrey),
                               )
                             },
-                            onValueChanged: (i) {
+                            onValueChanged: (int? i) {
                               setState(() {
-                                segmentedControlGroupValue = i;
+                                segmentedControlGroupValue = i!!;
                               });
                             }),
                         Text(
@@ -417,9 +418,9 @@ class _BmiLineChartState extends State<BmiLineChart> {
           isCurved: true,
           colors: [
             ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                .lerp(0.2),
+                .lerp(0.2)!!,
             ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                .lerp(0.2),
+                .lerp(0.2)!!,
           ],
           barWidth: 3,
           isStrokeCapRound: true,
@@ -428,10 +429,10 @@ class _BmiLineChartState extends State<BmiLineChart> {
           ),
           belowBarData: BarAreaData(show: true, colors: [
             ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                .lerp(0.2)
+                .lerp(0.2)!
                 .withOpacity(0.1),
             ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                .lerp(0.2)
+                .lerp(0.2)!
                 .withOpacity(0.1),
           ]),
         ),

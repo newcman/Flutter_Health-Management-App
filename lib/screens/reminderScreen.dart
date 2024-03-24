@@ -31,17 +31,17 @@ List<Icon> icons = [
   ),
 ];
 
-Icon _iconState; //切换图标的显示
+Icon? _iconState; //切换图标的显示
 
 class ReminderScreen extends StatefulWidget {
-  const ReminderScreen({Key key}) : super(key: key);
+  const ReminderScreen({Key? key}) : super(key: key);
 
   @override
   _ReminderScreenState createState() => _ReminderScreenState();
 }
 
 class _ReminderScreenState extends State<ReminderScreen> {
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin; //声明一个本地提醒的插件
+  FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin; //声明一个本地提醒的插件
 
   @override
   void initState() {
@@ -56,14 +56,14 @@ class _ReminderScreenState extends State<ReminderScreen> {
     var android = new AndroidInitializationSettings('@mipmap/ic_launcher');
     var iOS = new IOSInitializationSettings();
     var initSetttings = new InitializationSettings(android: android, iOS: iOS);
-    flutterLocalNotificationsPlugin.initialize(initSetttings,
+    flutterLocalNotificationsPlugin?.initialize(initSetttings,
         onSelectNotification: onSelectNotification);
   }
 
   // ignore: missing_return
-  Future onSelectNotification(String payload) {
+  Future onSelectNotification(String? payload) {
     debugPrint("payload : $payload");
-    showDialog(
+    return showDialog(
       context: context,
       builder: (_) => new AlertDialog(
         title: new Text('Notification'),
@@ -74,7 +74,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
 
   // 取消通知
   Future<void> cancelNotification(int index) async {
-    await flutterLocalNotificationsPlugin.cancel(index);
+    await flutterLocalNotificationsPlugin?.cancel(index);
   }
 
   Future<void> _handleClickMe(
@@ -93,7 +93,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
             actions: <Widget>[
               CupertinoDialogAction(
                 onPressed: () =>
-                    AlarmDataBaseProvider.db.delete(alarm.id).then((_) {
+                    AlarmDataBaseProvider.db.delete(alarm?.id ?? -1).then((_) {
                   BlocProvider.of<ReminderBloc>(context).add(
                     DeleteAlarm(index),
                   );

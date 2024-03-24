@@ -2,14 +2,19 @@
 import 'package:bp_notepad/db/bp_databaseProvider.dart';
 
 class BloodPressureDB {
-  int id;
+  int? id;
   int sbp;
   int dbp;
   int hr;
-  int state;
+  int? state;
   String date;
 
-  BloodPressureDB({this.sbp, this.dbp, this.hr, this.state, this.date});
+  BloodPressureDB(
+      {this.id,
+      required this.sbp,
+      required this.dbp,
+      required this.hr, this.state,
+      required this.date});
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
@@ -26,12 +31,13 @@ class BloodPressureDB {
     return map;
   }
 
-  BloodPressureDB.fromMap(Map<String, dynamic> map) {
-    id = map[BpDataBaseProvider.COLUMN_ID];
-    sbp = map[BpDataBaseProvider.COLUMN_SBP];
-    dbp = map[BpDataBaseProvider.COLUMN_DBP];
-    hr = map[BpDataBaseProvider.COLUMN_HR];
-    state = map[BpDataBaseProvider.COLUMN_STATE];
-    date = map[BpDataBaseProvider.COLUMN_TIME];
+  static fromMap(Map<String, dynamic> map) {
+    return BloodPressureDB(
+        id: map[BpDataBaseProvider.COLUMN_ID],
+        sbp: map[BpDataBaseProvider.COLUMN_SBP],
+        dbp: map[BpDataBaseProvider.COLUMN_DBP],
+        hr: map[BpDataBaseProvider.COLUMN_HR],
+        state: map[BpDataBaseProvider.COLUMN_STATE],
+        date: map[BpDataBaseProvider.COLUMN_TIME]);
   }
 }

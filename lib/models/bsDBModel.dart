@@ -2,12 +2,12 @@
 import 'package:bp_notepad/db/bs_databaseProvider.dart';
 
 class BloodSugarDB {
-  int id;
+  int? id;
   double glu;
   int state;
   String date;
 
-  BloodSugarDB({this.id, this.glu, this.state, this.date});
+  BloodSugarDB({this.id, required this.glu, required this.state, required this.date});
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
@@ -22,10 +22,10 @@ class BloodSugarDB {
     return map;
   }
 
-  BloodSugarDB.fromMap(Map<String, dynamic> map) {
-    id = map[BsDataBaseProvider.COLUMN_ID];
-    glu = map[BsDataBaseProvider.COLUMN_GLU];
-    state = map[BsDataBaseProvider.COLUMN_STATE];
-    date = map[BsDataBaseProvider.COLUMN_TIME];
+  static fromMap(Map<String, dynamic> map) {
+    return BloodSugarDB(id : map[BsDataBaseProvider.COLUMN_ID],
+        glu : map[BsDataBaseProvider.COLUMN_GLU],
+        state : map[BsDataBaseProvider.COLUMN_STATE],
+        date : map[BsDataBaseProvider.COLUMN_TIME]);
   }
 }

@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 class MedicineListScreen extends StatefulWidget {
   final List medicineList;
 
-  const MedicineListScreen({Key key, this.medicineList}) : super(key: key);
+  const MedicineListScreen({Key? key, required this.medicineList}) : super(key: key);
 
   @override
   _MedicineListScreenState createState() => _MedicineListScreenState();

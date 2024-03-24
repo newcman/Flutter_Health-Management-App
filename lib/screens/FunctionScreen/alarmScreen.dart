@@ -24,10 +24,10 @@ class AlarmScreen extends StatefulWidget {
   final String initialMedicineUsage;
 
   const AlarmScreen({
-    Key key,
-    this.initialMedicineTitle,
-    this.initialMedicineDosage,
-    this.initialMedicineUsage,
+    Key? key,
+    required this.initialMedicineTitle,
+    required this.initialMedicineDosage,
+    required this.initialMedicineUsage,
   }) : super(key: key);
   @override
   _AlarmScreenState createState() => _AlarmScreenState();
@@ -38,11 +38,11 @@ class _AlarmScreenState extends State<AlarmScreen> {
   DateTime _selectedDate = DateTime.now(); //获取一个当前的日期
   String _formattedDate =
       DateFormat('yyyy-MM-dd kk:mm').format(DateTime.now()); //获取一个格式化后的当前日期
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin; //声明一个本地提醒的插件
+  FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin; //声明一个本地提醒的插件
   final TextEditingController _textEditingController = TextEditingController();
-  TextEditingController _medicineInput;
-  TextEditingController _dosageInput;
-  TextEditingController _usageInput;
+  TextEditingController? _medicineInput;
+  TextEditingController? _dosageInput;
+  TextEditingController? _usageInput;
 
   // Create a text controller and use it to retrieve the current value
   // of the TextField.
@@ -65,14 +65,14 @@ class _AlarmScreenState extends State<AlarmScreen> {
     var android = new AndroidInitializationSettings('@mipmap/ic_launcher');
     var iOS = new IOSInitializationSettings();
     var initSetttings = new InitializationSettings(android: android, iOS: iOS);
-    flutterLocalNotificationsPlugin.initialize(initSetttings,
+    flutterLocalNotificationsPlugin?.initialize(initSetttings,
         onSelectNotification: onSelectNotification);
   }
 
   // ignore: missing_return
-  Future onSelectNotification(String payload) {
+  Future onSelectNotification(String? payload) {
     debugPrint("payload : $payload");
-    showDialog(
+    return showDialog(
       context: context,
       builder: (_) => new AlertDialog(
         title: new Text('Notification'),
@@ -109,7 +109,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
     // IOS设备
     var iOS = new IOSNotificationDetails(threadIdentifier: "thread_id");
     var platform = new NotificationDetails(android: android, iOS: iOS);
-    await flutterLocalNotificationsPlugin.zonedSchedule(
+    await flutterLocalNotificationsPlugin?.zonedSchedule(
         _pushID,
         AppLocalization.of(context).translate('noti_medicine_remind'),
         '${alarmList[1]}:${alarmList[2]}\n${AppLocalization.of(context).translate('dosage')}:${alarmList[3]}',
@@ -122,11 +122,11 @@ class _AlarmScreenState extends State<AlarmScreen> {
   }
 
   _selectDate() async {
-    DateTime pickedDate = await showModalBottomSheet<DateTime>(
+    DateTime? pickedDate = await showModalBottomSheet<DateTime>(
       backgroundColor: CupertinoDynamicColor.resolve(modalGroundColor, context),
       context: context,
       builder: (context) {
-        DateTime tempPickedDate;
+        DateTime? tempPickedDate;
         return Container(
           height: 350,
           child: Column(
@@ -304,21 +304,21 @@ class _AlarmScreenState extends State<AlarmScreen> {
                               ),
                               ButtonButton(
                                 onTap: () {
-                                  _formKey.currentState.save();
+                                  _formKey.currentState?.save();
                                   if (_medicine != '') {
-                                    _medicineInput.text = _medicine;
+                                    _medicineInput?.text = _medicine;
                                   }
                                   if (_dosage != '') {
-                                    _dosageInput.text = _dosage;
+                                    _dosageInput?.text = _dosage;
                                   }
                                   if (_usage != '') {
-                                    _usageInput.text = _usage;
+                                    _usageInput?.text = _usage;
                                   }
                                   AlarmDB alarmDB = AlarmDB(
                                     date: _formattedDate,
-                                    medicine: _medicineInput.text,
-                                    dosage: _dosageInput.text,
-                                    state: _usageInput.text,
+                                    medicine: _medicineInput?.text.toString() ?? "",
+                                    dosage: _dosageInput?.text.toString() ?? "",
+                                    state: _usageInput?.text?.toString() ?? "",
                                     pushID: _pushID,
                                   );
                                   AlarmDataBaseProvider.db.insert(alarmDB).then(

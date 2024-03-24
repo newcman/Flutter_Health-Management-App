@@ -2,12 +2,12 @@
 import 'dart:math';
 
 class BMICalculator {
-  BMICalculator({this.height, this.weight, this.age, this.waist, this.gender});
+  BMICalculator({required this.height, required this.weight, required this.age, this.waist,required this.gender});
 
   final int height;
   final double weight;
   final int age;
-  final int waist;
+  int? waist = 0;
   final int gender;
 
   double _bmi = 0;
@@ -15,7 +15,7 @@ class BMICalculator {
 
   double calculateBMI() {
     _bmi = weight / pow(height / 100, 2);
-    return num.parse(_bmi.toStringAsFixed(1));
+    return num.parse(_bmi.toStringAsFixed(1)).toDouble();
   }
 
   double calculateBF() {
@@ -29,7 +29,7 @@ class BMICalculator {
         (0.005 * _bmi * _bmi * gender) +
         (0.00021 * _bmi * _bmi * age);
     if (_bf > 0)
-      return num.parse(_bf.toStringAsFixed(1));
+      return num.parse(_bf.toStringAsFixed(1)).toDouble();
     else
       return 0;
   }
