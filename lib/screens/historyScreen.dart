@@ -185,7 +185,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                         // formatAnimation: FormatAnimation.slide,
                         focusedDay: DateTime.now(),
                         firstDay: DateTime(2020, 9, 7, 17, 30),
-                        lastDay:DateTime(2020, 9, 7, 17, 30)),
+                        lastDay:DateTime(2025, 9, 7, 17, 30)),
                         // startingDayOfWeek: StartingDayOfWeek.sunday,
                         // availableGestures: AvailableGestures.all,
                         // availableCalendarFormats: const {
