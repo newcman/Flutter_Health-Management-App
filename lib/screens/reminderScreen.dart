@@ -93,7 +93,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
             actions: <Widget>[
               CupertinoDialogAction(
                 onPressed: () =>
-                    AlarmDataBaseProvider.db.delete(alarm?.id ?? -1).then((_) {
+                    AlarmDataBaseProvider.db.delete(alarm.id ?? -1).then((_) {
                   BlocProvider.of<ReminderBloc>(context).add(
                     DeleteAlarm(index),
                   );

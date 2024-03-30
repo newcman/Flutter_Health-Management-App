@@ -29,10 +29,10 @@ class BodyDB {
 
   static fromMap(Map<String, dynamic> map) {
     return BodyDB(id: map[BodyDataBaseProvider.COLUMN_ID],
-        date: map[BodyDataBaseProvider.COLUMN_TIME],
-        bmi: map[BodyDataBaseProvider.COLUMN_BMI],
-        bf: map[BodyDataBaseProvider.COLUMN_BF],
-        weight: map[BodyDataBaseProvider.COLUMN_WEIGHT],
-        gender: map[BodyDataBaseProvider.COLUMN_GENDER]);
+        date: map[BodyDataBaseProvider.COLUMN_TIME] ?? "",
+        bmi: map[BodyDataBaseProvider.COLUMN_BMI] ?? 0,
+        bf: map[BodyDataBaseProvider.COLUMN_BF] ?? 0,
+        weight: map[BodyDataBaseProvider.COLUMN_WEIGHT] ?? 0,
+        gender: map[BodyDataBaseProvider.COLUMN_GENDER] ?? 0);
   }
 }

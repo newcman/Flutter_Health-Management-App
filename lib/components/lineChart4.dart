@@ -134,7 +134,7 @@ class _SleepLineChartState extends State<SleepLineChart> {
                             },
                             onValueChanged: (int? i) {
                               setState(() {
-                                segmentedControlGroupValue = i!!;
+                                segmentedControlGroupValue = i!;
                               });
                             }),
                         Text(

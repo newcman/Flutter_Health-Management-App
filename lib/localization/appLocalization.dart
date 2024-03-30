@@ -10,7 +10,7 @@ class AppLocalization {
   AppLocalization(this.locale);
 
   static AppLocalization of(BuildContext context) {
-    return Localizations.of<AppLocalization>(context, AppLocalization)!!;
+    return Localizations.of<AppLocalization>(context, AppLocalization)!;
   }
 
   // 将json文件读取到一个map中，方便使用

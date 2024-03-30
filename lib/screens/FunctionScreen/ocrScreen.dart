@@ -108,7 +108,7 @@ class _OCRDetectState extends State<OCRDetect> {
                                           backGroundColor, context),
                                     ),
                                   )
-                                : Image.file(_image!!)),
+                                : Image.file(_image!)),
                         Container(
                           child: Column(
                             children: <Widget>[

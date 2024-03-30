@@ -36,10 +36,10 @@ class AlarmDB {
   static fromMap(Map<String, dynamic> map) {
     return AlarmDB(
         id: map[AlarmDataBaseProvider.COLUMN_ID],
-        state: map[AlarmDataBaseProvider.COLUMN_STATE],
-        date: map[AlarmDataBaseProvider.COLUMN_DATE],
-        medicine: map[AlarmDataBaseProvider.COLUMN_MEDICINE],
-        dosage: map[AlarmDataBaseProvider.COLUMN_DOSAGE],
+        state: map[AlarmDataBaseProvider.COLUMN_STATE] ?? "",
+        date: map[AlarmDataBaseProvider.COLUMN_DATE] ?? "",
+        medicine: map[AlarmDataBaseProvider.COLUMN_MEDICINE] ?? "",
+        dosage: map[AlarmDataBaseProvider.COLUMN_DOSAGE] ?? "",
         pushID: map[AlarmDataBaseProvider.COLUMN_PUSHID]);
   }
 }

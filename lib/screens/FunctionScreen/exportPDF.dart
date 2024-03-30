@@ -159,7 +159,7 @@ PdfLayoutResult drawHeader(PdfPage page, Size pageSize, PdfGrid grid) {
   return PdfTextElement(text: address, font: contentFont).draw(
       page: page,
       bounds: Rect.fromLTWH(30, 120, pageSize.width - (contentSize.width + 30),
-          pageSize.height - 120))!!;
+          pageSize.height - 120))!;
 }
 
 //Draws the grid
@@ -197,7 +197,7 @@ PdfLayoutResult drawGrid2(
     }
   };
   //Draw the PDF grid and get the result.
-  result = grid.draw(page: page, bounds: Rect.fromLTWH(0, 0, 0, 0))!!;
+  result = grid.draw(page: page, bounds: Rect.fromLTWH(0, 0, 0, 0))!;
   return result;
 }
 

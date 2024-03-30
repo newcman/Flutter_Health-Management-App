@@ -24,8 +24,8 @@ class BloodSugarDB {
 
   static fromMap(Map<String, dynamic> map) {
     return BloodSugarDB(id : map[BsDataBaseProvider.COLUMN_ID],
-        glu : map[BsDataBaseProvider.COLUMN_GLU],
-        state : map[BsDataBaseProvider.COLUMN_STATE],
-        date : map[BsDataBaseProvider.COLUMN_TIME]);
+        glu : map[BsDataBaseProvider.COLUMN_GLU] ?? 0.0,
+        state : map[BsDataBaseProvider.COLUMN_STATE] ?? 0,
+        date : map[BsDataBaseProvider.COLUMN_TIME] ?? "");
   }
 }

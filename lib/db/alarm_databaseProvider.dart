@@ -21,10 +21,10 @@ class AlarmDataBaseProvider {
   // 返回数据库，一般情况无需更改
   Future<Database> get database async {
     if (_database != null) {
-      return _database!!;
+      return _database!;
     }
     _database = await createDatabase();
-    return _database!!;
+    return _database!;
   }
 
   // 创建数据库参数，一般情况无需更改

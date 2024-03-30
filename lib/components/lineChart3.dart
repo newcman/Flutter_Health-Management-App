@@ -134,7 +134,7 @@ class _BmiLineChartState extends State<BmiLineChart> {
                             },
                             onValueChanged: (int? i) {
                               setState(() {
-                                segmentedControlGroupValue = i!!;
+                                segmentedControlGroupValue = i!;
                               });
                             }),
                         Text(
@@ -418,9 +418,9 @@ class _BmiLineChartState extends State<BmiLineChart> {
           isCurved: true,
           colors: [
             ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                .lerp(0.2)!!,
+                .lerp(0.2)!,
             ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                .lerp(0.2)!!,
+                .lerp(0.2)!,
           ],
           barWidth: 3,
           isStrokeCapRound: true,

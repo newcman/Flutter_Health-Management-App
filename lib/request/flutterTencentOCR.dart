@@ -128,6 +128,7 @@ class FlutterTencentOcr {
               (X509Certificate cert, String host, int port) {
             return true;
           };
+          return null;
         };
       }
 

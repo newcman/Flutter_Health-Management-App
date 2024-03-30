@@ -24,8 +24,8 @@ class SleepDB {
 
   static fromMap(Map<String, dynamic> map) {
     return SleepDB(id : map[SleepDataBaseProvider.COLUMN_ID],
-        sleep : map[SleepDataBaseProvider.COLUMN_SLEEP],
-        state : map[SleepDataBaseProvider.COLUMN_STATE],
-        date : map[SleepDataBaseProvider.COLUMN_TIME]);
+        sleep : map[SleepDataBaseProvider.COLUMN_SLEEP] ?? 0.0,
+        state : map[SleepDataBaseProvider.COLUMN_STATE] ?? 0,
+        date : map[SleepDataBaseProvider.COLUMN_TIME] ?? "");
   }
 }

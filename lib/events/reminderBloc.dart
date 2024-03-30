@@ -8,7 +8,6 @@ class ReminderBloc extends Bloc<ReminderEvent, List<AlarmDB>> {
 
 
   // 初始化一个AlarmDB列表
-  @override
   List<AlarmDB> get initialState => [];
 
   @override
@@ -17,10 +16,8 @@ class ReminderBloc extends Bloc<ReminderEvent, List<AlarmDB>> {
       yield event.alarmList;
     } else if (event is AddAlarm) {
       List<AlarmDB> newState = List.from(state);
-      if (event.newAlarm != null) {
-        newState.add(event.newAlarm);
-      }
-      yield newState;
+      newState.add(event.newAlarm);
+          yield newState;
     } else if (event is DeleteAlarm) {
       List<AlarmDB> newState = List.from(state);
       newState.removeAt(event.alarmIndex);

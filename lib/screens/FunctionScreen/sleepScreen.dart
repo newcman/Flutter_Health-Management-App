@@ -38,7 +38,7 @@ class _SleepScreenState extends State<SleepScreen> {
       RegExp c = new RegExp(r'([0-9]{1,2}?)+(\.[0-9]{1,2})');
       Iterable<Match> matches = c.allMatches(text);
       for (Match m in matches) {
-        double match = double.parse(m?[0] ?? "0");
+        double match = double.parse(m[0] ?? "0");
         bsData.add(match);
       }
     } else if (text.contains("后")) {
@@ -46,7 +46,7 @@ class _SleepScreenState extends State<SleepScreen> {
       RegExp c = new RegExp(r'([0-9]{1,2}?)+(\.[0-9]{1,2})');
       Iterable<Match> matches = c.allMatches(text);
       for (Match m in matches) {
-        double match = double.parse(m?[0] ?? "0");
+        double match = double.parse(m[0] ?? "0");
         bsData.add(match);
       }
     }

@@ -318,7 +318,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                                     date: _formattedDate,
                                     medicine: _medicineInput?.text.toString() ?? "",
                                     dosage: _dosageInput?.text.toString() ?? "",
-                                    state: _usageInput?.text?.toString() ?? "",
+                                    state: _usageInput?.text.toString() ?? "",
                                     pushID: _pushID,
                                   );
                                   AlarmDataBaseProvider.db.insert(alarmDB).then(

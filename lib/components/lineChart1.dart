@@ -151,7 +151,7 @@ class _BPLineChartState extends State<BPLineChart> {
                             },
                             onValueChanged: (int? i) {
                               setState(() {
-                                segmentedControlGroupValue = i!!;
+                                segmentedControlGroupValue = i!;
                               });
                             }),
                         const SizedBox(

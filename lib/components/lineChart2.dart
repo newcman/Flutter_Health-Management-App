@@ -111,7 +111,7 @@ class _BSLineChartState extends State<BSLineChart> {
                             },
                             onValueChanged: (int? i) {
                               setState(() {
-                                segmentedControlGroupValue = i!!;
+                                segmentedControlGroupValue = i!;
                               });
                             }),
                         Text(

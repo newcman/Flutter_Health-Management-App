@@ -20,10 +20,10 @@ class BpDataBaseProvider {
   //get database在flutter中为getter的写法
   Future<Database> get database async {
     if (_database != null) {
-      return _database!!;
+      return _database!;
     }
     _database = await createDatabase();
-    return _database!!;
+    return _database!;
   }
 
 //注意数据类型
@@ -48,13 +48,13 @@ class BpDataBaseProvider {
   }
 
   Future<List> getGraphData() async {
-    List sbpDataList = [];
+        List sbpDataList = [];
     List dbpDataList = [];
     final db = await database;
     var datas = await db.query(TABLE_NAME, columns: [COLUMN_SBP, COLUMN_DBP]);
-    datas.forEach((element) {
-      BloodPressureDB bloodPressureDB = BloodPressureDB.fromMap(element);
-      sbpDataList.add(bloodPressureDB.sbp);
+        datas.forEach((element) {
+            BloodPressureDB bloodPressureDB = BloodPressureDB.fromMap(element);
+            sbpDataList.add(bloodPressureDB.sbp);
       dbpDataList.add(bloodPressureDB.dbp);
     });
     return [sbpDataList, dbpDataList];
@@ -87,6 +87,7 @@ class BpDataBaseProvider {
   }
 
   Future<BloodPressureDB> insert(BloodPressureDB bloodPressureDB) async {
+    print("insert ${bloodPressureDB.state}");
     final db = await database;
     bloodPressureDB.id = await db.insert(TABLE_NAME, bloodPressureDB.toMap());
     return bloodPressureDB;
