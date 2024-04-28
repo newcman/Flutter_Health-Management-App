@@ -98,7 +98,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
                     DeleteAlarm(index),
                   );
                   cancelNotification(alarm.pushID);
-                  Navigator.pop(context);
                 }),
                 child: Text(AppLocalization.of(context).translate('delete')),
               ),
@@ -154,49 +153,69 @@ class _ReminderScreenState extends State<ReminderScreen> {
                         } else {
                           _iconState = icons[3];
                         }
-                        return Card(
-                          color: CupertinoDynamicColor.resolve(
-                              backGroundColor, context),
-                          elevation: 4,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0)),
-                          // color: const Color(0xFF1D1E33),
-                          child: ListTile(
-                            isThreeLine: true,
-                            contentPadding: EdgeInsets.all(16),
-                            title: Text("${alarm.medicine}",
-                                style: TextStyle(
-                                    fontSize: 26,
-                                    fontWeight: FontWeight.bold,
-                                    color: CupertinoDynamicColor.resolve(
-                                        textColor, context))),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "${AppLocalization.of(context).translate('date')}: ${alarm.date}",
+                        return new Dismissible(
+                          key: new Key(alarm.medicine + index.toString()),
+                          direction: DismissDirection.endToStart,
+                          background: Container(
+                              color : Color(0xFFFFFFFF)
+                          ),
+                          onDismissed: (direction) {
+                            debugPrint("onDismissed $direction");
+                            if (direction == DismissDirection.endToStart) {
+                              AlarmDataBaseProvider.db
+                                  .delete(alarm.id ?? -1)
+                                  .then((_) {
+                                BlocProvider.of<ReminderBloc>(context).add(
+                                  DeleteAlarm(index),
+                                );
+                                cancelNotification(alarm.pushID);
+                              });
+                            }
+                          },
+                          child: Card(
+                            color: CupertinoDynamicColor.resolve(
+                                backGroundColor, context),
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0)),
+                            // color: const Color(0xFF1D1E33),
+                            child: ListTile(
+                              isThreeLine: true,
+                              contentPadding: EdgeInsets.all(16),
+                              title: Text("${alarm.medicine}",
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 26,
                                       fontWeight: FontWeight.bold,
                                       color: CupertinoDynamicColor.resolve(
-                                          textColor, context)),
-                                ),
-                                const SizedBox(
-                                  height: 3,
-                                ),
-                                Text(
-                                  "${AppLocalization.of(context).translate('dosage')}: ${alarm.dosage}\n${AppLocalization.of(context).translate('usage')}: ${alarm.state}",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: CupertinoDynamicColor.resolve(
-                                          textColor, context)),
-                                ),
-                              ],
+                                          textColor, context))),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${AppLocalization.of(context).translate('date')}: ${alarm.date}",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: CupertinoDynamicColor.resolve(
+                                            textColor, context)),
+                                  ),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  Text(
+                                    "${AppLocalization.of(context).translate('dosage')}: ${alarm.dosage}\n${AppLocalization.of(context).translate('usage')}: ${alarm.state}",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: CupertinoDynamicColor.resolve(
+                                            textColor, context)),
+                                  ),
+                                ],
+                              ),
+                              trailing: _iconState,
+                              onLongPress: () => {
+                                _handleClickMe(context, index, alarm),
+                              },
                             ),
-                            trailing: _iconState,
-                            onLongPress: () => {
-                              _handleClickMe(context, index, alarm),
-                            },
                           ),
                         );
                       },

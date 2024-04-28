@@ -87,6 +87,7 @@ class AlarmDataBaseProvider {
         COLUMN_MEDICINE,
         COLUMN_DOSAGE,
         COLUMN_STATE,
+        COLUMN_PUSHID
       ],
       where: "id = ?",
       whereArgs: [idList.length],
