@@ -6,9 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ReminderBloc extends Bloc<ReminderEvent, List<AlarmDB>> {
   ReminderBloc(List<AlarmDB> initialState) : super(initialState) {
     on<SetAlarms>((event, emit) =>
-    {
       emit(event.alarmList)
-    });
+    );
     on<AddAlarm>((event, emit) {
       List<AlarmDB> newState = List.from(state);
       newState.add(event.newAlarm);

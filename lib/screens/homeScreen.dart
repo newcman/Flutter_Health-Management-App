@@ -26,28 +26,20 @@ class _HomeScreenState extends State<HomeScreen>
     super.build(context);
     return CupertinoPageScaffold(
       backgroundColor: CupertinoColors.systemGroupedBackground,
-      child: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              CupertinoSliverNavigationBar(
-                largeTitle:
-                    Text(AppLocalization.of(context).translate('home_page')),
-                trailing: CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    child: Icon(CupertinoIcons.person_crop_circle,size: 32,),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (context) => AboutScreen()));
-                    }),
-              )
-            ];
-          },
-          body: MediaQuery.removePadding(
-            context: context,
-            removeTop: true,
-            child: Container(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text(AppLocalization.of(context).translate('home_page')),
+       trailing: CupertinoButton(
+            padding: EdgeInsets.zero,
+            child: Icon(
+              CupertinoIcons.person_crop_circle,
+              size: 32,
+            ),
+            onPressed: () {
+              Navigator.push(context,
+                  CupertinoPageRoute(builder: (context) => AboutScreen()));
+            }),
+      ),
+      child: Container(
               padding: EdgeInsets.all(5.0),
               child: ListView(
                 children: [
@@ -71,7 +63,6 @@ class _HomeScreenState extends State<HomeScreen>
                 ],
               ),
             ),
-          )),
     );
   }
 }

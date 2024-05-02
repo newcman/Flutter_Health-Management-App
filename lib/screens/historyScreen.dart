@@ -17,11 +17,18 @@ class HistoryScreen extends StatefulWidget {
   _HistoryScreenState createState() => _HistoryScreenState();
 }
 
+extension DateTimeExtension on DateTime {
+  bool isSameDay(DateTime date) {
+    return year == date.year && month == date.month && day == date.day;
+  }
+}
+
 class _HistoryScreenState extends State<HistoryScreen>
     with TickerProviderStateMixin {
   Map<DateTime, List> _events = {};
-  final _selectedDay = DateTime.now();
+  DateTime _selectedDay = DateTime.now();
   List? _selectedEvents;
+  DateTime _focusedDay = DateTime.now();
   AnimationController? _animationController;
   // CalendarController? _calendarController;
   AsyncMemoizer? _memoizer;
@@ -141,125 +148,165 @@ class _HistoryScreenState extends State<HistoryScreen>
     super.dispose();
   }
 
-  void _onDaySelected(DateTime day, List events, List holidays) {
+  void _onDaySelected(DateTime day, DateTime focusedDay, List events) {
     // print('CALLBACK: _onDaySelected');
     setState(() {
       _selectedEvents = events;
+      _focusedDay = focusedDay;
+      _selectedDay = day;
     });
   }
 
-  void _onVisibleDaysChanged(
-      DateTime first, DateTime last, CalendarFormat format) {
+  void _onVisibleDaysChanged(DateTime onPageChanged) {
     // print('CALLBACK: _onVisibleDaysChanged');
   }
 
-  void _onCalendarCreated(
-      DateTime first, DateTime last, CalendarFormat format) {
-    // print('CALLBACK: _onCalendarCreated');
+  void _onCalendarCreated(PageController pageController) {
+    print('CALLBACK: _onCalendarCreated');
+  }
+
+  List getDayEvents(Map<DateTime, List> map, DateTime day) {
+    var result = [];
+    map.forEach((key, value) {
+      if (key.isSameDay(day)) {
+        result = value;
+        return;
+      }
+    });
+    return result;
   }
 
   @override
   Widget build(BuildContext context) {
+    var currentDay = DateTime.now();
     return Scaffold(
       body: CupertinoPageScaffold(
-        backgroundColor: CupertinoColors.systemGroupedBackground,
-        child: NestedScrollView(
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
-              return <Widget>[
-                CupertinoSliverNavigationBar(
-                    largeTitle: Text(
-                        AppLocalization.of(context).translate('history_page'))),
-              ];
-            },
-            body: FutureBuilder(
+          backgroundColor: CupertinoColors.systemGroupedBackground,
+          navigationBar: CupertinoNavigationBar(
+              middle:
+                  Text(AppLocalization.of(context).translate('history_page'))),
+          child: Container(
+            padding:
+                EdgeInsets.only(right: 5.0, left:5.0, top: 75, bottom: 5.0),
+            child: FutureBuilder(
                 future: getDatabaseEvent(),
                 builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data != null) {
+                    _selectedEvents = getDayEvents(
+                        snapshot.data as Map<DateTime, List>, _selectedDay);
+                  }
                   return Column(
                     children: <Widget>[
                       TableCalendar(
                         locale: 'zh_CN',
                         // calendarController: _calendarController,
                         // events: snapshot.data,
+                        eventLoader: (day) {
+                          if (snapshot.data != null) {
+                            return getDayEvents(
+                                snapshot.data as Map<DateTime, List>, day);
+                          } else {
+                            return [];
+                          }
+                        },
+                        selectedDayPredicate: (day) =>
+                            day.isSameDay(_selectedDay),
                         // initialCalendarFormat: CalendarFormat.month,
                         // formatAnimation: FormatAnimation.slide,
-                        focusedDay: DateTime.now(),
-                        firstDay: DateTime(2020, 9, 7, 17, 30),
-                        lastDay:DateTime(2025, 9, 7, 17, 30)),
+                        focusedDay: _focusedDay,
+                        firstDay: DateTime(currentDay.year - 1,
+                            currentDay.month, currentDay.day),
+                        lastDay: DateTime(currentDay.year + 1, currentDay.month,
+                            currentDay.day),
                         // startingDayOfWeek: StartingDayOfWeek.sunday,
-                        // availableGestures: AvailableGestures.all,
-                        // availableCalendarFormats: const {
-                        //   CalendarFormat.month: '',
-                        //   CalendarFormat.week: '',
-                        // },
-                        // calendarStyle: CalendarStyle(
-                        //   selectedColor: CupertinoColors.systemRed,
-                        //   todayColor: Colors.red[200],
-                        //   outsideDaysVisible: false,
-                        //   weekdayStyle: TextStyle().copyWith(
-                        //       color: CupertinoDynamicColor.resolve(
-                        //           textColor, context)),
-                        //   eventDayStyle: TextStyle().copyWith(
-                        //       color: CupertinoDynamicColor.resolve(
-                        //           textColor, context)),
-                        //   weekendStyle: TextStyle()
-                        //       .copyWith(color: CupertinoColors.systemGrey),
-                        //   holidayStyle: TextStyle()
-                        //       .copyWith(color: CupertinoColors.systemBlue),
-                        // ),
-                        // daysOfWeekStyle: DaysOfWeekStyle(
-                        //   weekendStyle: TextStyle()
-                        //       .copyWith(color: CupertinoColors.systemBlue),
-                        // ),
-                        // headerStyle: HeaderStyle(
-                        //   titleTextStyle: TextStyle().copyWith(
-                        //       fontSize: 16,
-                        //       color: CupertinoDynamicColor.resolve(
-                        //           textColor, context)),
-                        //   centerHeaderTitle: true,
-                        //   formatButtonVisible: false,
-                        // ),
-                      //   builders: CalendarBuilders(
-                      //     markersBuilder: (context, date, events, holidays) {
-                      //       final children = <Widget>[];
-                      //       if (events.isNotEmpty) {
-                      //         children.add(
-                      //           Positioned(
-                      //               right: 1,
-                      //               bottom: 1,
-                      //               child: AnimatedContainer(
-                      //                 duration:
-                      //                     const Duration(milliseconds: 300),
-                      //                 decoration: BoxDecoration(
-                      //                   shape: BoxShape.circle,
-                      //                   color: _calendarController
-                      //                           .isSelected(date)
-                      //                       ? CupertinoColors.systemRed
-                      //                       : _calendarController.isToday(date)
-                      //                           ? Colors.red[200]
-                      //                           : CupertinoColors.activeBlue,
-                      //                 ),
-                      //                 width: 20.0,
-                      //                 height: 20.0,
-                      //                 child: Center(
-                      //                   child: Text(
-                      //                     '${events.length}',
-                      //                     style: TextStyle().copyWith(
-                      //                       color: Colors.white,
-                      //                       fontSize: 12.0,
-                      //                     ),
-                      //                   ),
-                      //                 ),
-                      //               )),
-                      //         );
-                      //       }
-                      //       return children;
-                      //     },
-                      //   ),
-                      //   onDaySelected: (date, events, holidays) {
-                      //     _onDaySelected(date, events, holidays);
-                      //     _animationController.forward(from: 0.0);
-                      //   },
+                        availableGestures: AvailableGestures.all,
+                        availableCalendarFormats: const {
+                          CalendarFormat.month: '',
+                          CalendarFormat.week: '',
+                        },
+                        calendarStyle: CalendarStyle(
+                          // selectedTextStyle: TextStyle(color: CupertinoColors.systemRed ),
+                          selectedDecoration: BoxDecoration(
+                              color: CupertinoColors.systemRed,
+                              shape: BoxShape.circle),
+                          //todayTextStyle: TextStyle(color: Colors.red[200] ),
+                          todayDecoration: BoxDecoration(
+                              color: _selectedDay.isSameDay(DateTime.now())
+                                  ? CupertinoColors.systemRed
+                                  : Colors.red[200],
+                              shape: BoxShape.circle),
+                          // selectedColor: CupertinoColors.systemRed,
+                          // todayColor: Colors.red[200],
+                          outsideDaysVisible: false,
+                          weekNumberTextStyle: TextStyle().copyWith(
+                              color: CupertinoDynamicColor.resolve(
+                                  textColor, context)),
+                          // eventDayStyle: TextStyle().copyWith(
+                          //     color: CupertinoDynamicColor.resolve(
+                          //         textColor, context)),
+                          weekendTextStyle: TextStyle()
+                              .copyWith(color: CupertinoColors.systemGrey),
+                          holidayTextStyle: TextStyle()
+                              .copyWith(color: CupertinoColors.systemBlue),
+                          defaultTextStyle: TextStyle(color: Colors.white),
+                        ),
+                        daysOfWeekStyle: DaysOfWeekStyle(
+                          weekendStyle: TextStyle()
+                              .copyWith(color: CupertinoColors.systemBlue),
+                        ),
+                        headerStyle: HeaderStyle(
+                          titleTextStyle: TextStyle().copyWith(
+                              fontSize: 16,
+                              color: CupertinoDynamicColor.resolve(
+                                  textColor, context)),
+                          titleCentered: true,
+                          formatButtonVisible: false,
+                        ),
+                        calendarBuilders: CalendarBuilders(markerBuilder:
+                            (context, date, events /*, holidays*/) {
+                          if (events.isEmpty) {
+                            return Text("");
+                          }
+                          return Positioned(
+                              right: 1,
+                              bottom: 1,
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: _selectedDay.isSameDay(date)
+                                      ? CupertinoColors.systemRed
+                                      : date.isSameDay(DateTime.now())
+                                          ? Colors.red[200]
+                                          : CupertinoColors.activeBlue,
+                                ),
+                                width: 20.0,
+                                height: 20.0,
+                                child: Center(
+                                  child: Text(
+                                    '${events.length}',
+                                    style: TextStyle().copyWith(
+                                      color: Colors.white,
+                                      fontSize: 12.0,
+                                    ),
+                                  ),
+                                ),
+                              ));
+                        }),
+                        onDaySelected: (
+                          date,
+                          focusedDay,
+                          /*holidays*/
+                        ) {
+                          var events = getDayEvents(
+                              snapshot.data as Map<DateTime, List>, date);
+                          _onDaySelected(date, focusedDay, events);
+                          // _animationController?.forward(from: 0.0);
+                        },
+                        onCalendarCreated: _onCalendarCreated,
+                        onPageChanged: _onVisibleDaysChanged,
+                      ),
+
                       //   onVisibleDaysChanged: _onVisibleDaysChanged,
                       //   onCalendarCreated: _onCalendarCreated,
                       // ),
@@ -315,8 +362,8 @@ class _HistoryScreenState extends State<HistoryScreen>
                               )))),
                     ],
                   );
-                })),
-      ),
+                }),
+          )),
     );
   }
 }

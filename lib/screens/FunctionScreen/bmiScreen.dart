@@ -437,58 +437,33 @@ class _BmiScreenState extends State<BmiScreen> {
                   onTap: () {
                     double bmiResult = 0;
                     double bfResult = 0;
-                    if (selectedGender != null) {
-                      BMICalculator calc = BMICalculator(
-                          height: height,
+                    BMICalculator calc = BMICalculator(
+                        height: height,
+                        weight: weight,
+                        age: age,
+                        gender: selectedGender.index);
+                    var date = new DateTime.now().toLocal();
+                    String time =
+                        "${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+                    bmiResult = calc.calculateBMI();
+                    bfResult = calc.calculateBF();
+                    if (bmiResult > 10 && bmiResult < 100) {
+                      BodyDB bmiDB = new BodyDB(
+                          bmi: bmiResult,
+                          bf: bfResult,
                           weight: weight,
-                          age: age,
+                          date: time,
                           gender: selectedGender.index);
-                      var date = new DateTime.now().toLocal();
-                      String time =
-                          "${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
-                      bmiResult = calc.calculateBMI();
-                      bfResult = calc.calculateBF();
-                      if (bmiResult > 10 && bmiResult < 100) {
-                        BodyDB bmiDB = new BodyDB(
-                            bmi: bmiResult,
-                            bf: bfResult,
-                            weight: weight,
-                            date: time,
-                            gender: selectedGender.index);
-                        BodyDataBaseProvider.db.insert(bmiDB);
-                        Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => BMIResultScreen(
-                              bmiResult: bmiResult,
-                              brResult: bfResult,
-                            ),
+                      BodyDataBaseProvider.db.insert(bmiDB);
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => BMIResultScreen(
+                            bmiResult: bmiResult,
+                            brResult: bfResult,
                           ),
-                        );
-                      } else {
-                        return showDialog<void>(
-                            context: context,
-                            barrierDismissible: false, // user must tap button!
-                            builder: (BuildContext context) {
-                              return CupertinoAlertDialog(
-                                title: Text(
-                                  AppLocalization.of(context)
-                                      .translate('bmi_screen_staticWarning'),
-                                ),
-                                actions: <Widget>[
-                                  CupertinoDialogAction(
-                                    child: Text(
-                                      AppLocalization.of(context)
-                                          .translate('ok'),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            });
-                      }
+                        ),
+                      );
                     } else {
                       return showDialog<void>(
                           context: context,
@@ -497,12 +472,13 @@ class _BmiScreenState extends State<BmiScreen> {
                             return CupertinoAlertDialog(
                               title: Text(
                                 AppLocalization.of(context)
-                                    .translate('bmi_screen_stateWarning'),
+                                    .translate('bmi_screen_staticWarning'),
                               ),
                               actions: <Widget>[
                                 CupertinoDialogAction(
                                   child: Text(
-                                    AppLocalization.of(context).translate('ok'),
+                                    AppLocalization.of(context)
+                                        .translate('ok'),
                                   ),
                                   onPressed: () {
                                     Navigator.of(context).pop();
@@ -512,7 +488,7 @@ class _BmiScreenState extends State<BmiScreen> {
                             );
                           });
                     }
-                  },
+                                    },
                 ),
                 const SizedBox(
                   height: 4,

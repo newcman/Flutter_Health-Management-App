@@ -10,7 +10,6 @@ import 'package:bp_notepad/components/constants.dart';
 
 import 'FunctionScreen/sleepScreen.dart';
 
-
 const List<Icon> icons = [
   const Icon(
     FontAwesomeIcons.heartbeat,
@@ -47,53 +46,49 @@ class RecordMeun extends StatelessWidget {
       AppLocalization.of(context).translate('sleep_record'),
     ];
     return CupertinoPageScaffold(
-      backgroundColor: CupertinoDynamicColor.resolve(
-          CupertinoColors.systemGroupedBackground, context),
-      child: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            CupertinoSliverNavigationBar(
-              largeTitle:
-                  Text(AppLocalization.of(context).translate('record_tittle')),
-            ),
-          ];
-        },
-        body: MediaQuery.removePadding(
-            removeTop: true,
-            context: context,
-            child: Container(
-                padding: EdgeInsets.all(5.0),
-                child: ListView.builder(
-                  itemCount: pageRoutes.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                        child: Column(
-                      children: <Widget>[
-                        Card(
-                            color: CupertinoDynamicColor.resolve(
-                                backGroundColor, context),
-                            // elevation: 4.0, //Card的阴影
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: ListTile(
-                              leading: icons[index],
-                              title: Text(tittleTexts[index],style: TextStyle(color: CupertinoDynamicColor.resolve(textColor, context),fontSize: 18),),
-                              trailing:
-                                  const Icon(CupertinoIcons.chevron_forward,color: Color(0xFF505054),),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) =>
-                                            pageRoutes[index]));
-                              },
-                            ))
-                      ],
-                    ));
-                  },
-                ))),
-      ),
-    );
+        backgroundColor: CupertinoDynamicColor.resolve(
+            CupertinoColors.systemGroupedBackground, context),
+        navigationBar: CupertinoNavigationBar(
+          middle: Text(AppLocalization.of(context).translate('record_tittle')),
+        ),
+        child: Container(
+            padding: EdgeInsets.all(5.0),
+            child: ListView.builder(
+              itemCount: pageRoutes.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                    child: Column(
+                  children: <Widget>[
+                    Card(
+                        color: CupertinoDynamicColor.resolve(
+                            backGroundColor, context),
+                        // elevation: 4.0, //Card的阴影
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        child: ListTile(
+                          leading: icons[index],
+                          title: Text(
+                            tittleTexts[index],
+                            style: TextStyle(
+                                color: CupertinoDynamicColor.resolve(
+                                    textColor, context),
+                                fontSize: 18),
+                          ),
+                          trailing: const Icon(
+                            CupertinoIcons.chevron_forward,
+                            color: Color(0xFF505054),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => pageRoutes[index]));
+                          },
+                        ))
+                  ],
+                ));
+              },
+            )));
   }
 }

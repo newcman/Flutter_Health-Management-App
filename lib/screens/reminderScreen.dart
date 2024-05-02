@@ -41,7 +41,8 @@ class ReminderScreen extends StatefulWidget {
 }
 
 class _ReminderScreenState extends State<ReminderScreen> {
-  FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin; //声明一个本地提醒的插件
+  FlutterLocalNotificationsPlugin?
+      flutterLocalNotificationsPlugin; //声明一个本地提醒的插件
 
   @override
   void initState() {
@@ -111,119 +112,108 @@ class _ReminderScreenState extends State<ReminderScreen> {
 
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-        backgroundColor: CupertinoColors.systemGroupedBackground,
-        child: NestedScrollView(
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
-              return <Widget>[
-                CupertinoSliverNavigationBar(
-                  largeTitle: Text(
-                      AppLocalization.of(context).translate('reminder_tittle')),
-                  trailing: TextButton(
-                    child: Text(
-                      AppLocalization.of(context).translate('floating_text'),
-                      style: TextStyle(color: CupertinoColors.systemBlue),
-                    ),
-                    onPressed: () => Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (BuildContext context) => OCRDetect()),
+      backgroundColor: CupertinoColors.systemGroupedBackground,
+      navigationBar: CupertinoNavigationBar(
+          middle:
+              Text(AppLocalization.of(context).translate('reminder_tittle')),
+               trailing: CupertinoButton(
+            padding: EdgeInsets.zero,
+            child: Icon(
+              CupertinoIcons.add_circled,
+              size: 32,
+            ),
+            onPressed: () {
+              Navigator.push(
+              context,
+              CupertinoPageRoute(
+                  builder: (BuildContext context) => OCRDetect()),
+            );
+            }),
+      ),
+      child: Container(
+        padding: EdgeInsets.all(5.0),
+        child: BlocConsumer<ReminderBloc, List<AlarmDB>>(
+          builder: (context, alarmList) {
+            return ListView.builder(
+              itemCount: alarmList.length,
+              itemBuilder: (BuildContext context, int index) {
+                AlarmDB alarm = alarmList[index];
+                if (alarm.state == '口服') {
+                  _iconState = icons[0];
+                } else if (alarm.state == '注射') {
+                  _iconState = icons[1];
+                } else if (alarm.state == '外用') {
+                  _iconState = icons[2];
+                } else {
+                  _iconState = icons[3];
+                }
+                return new Dismissible(
+                  key: new Key(alarm.medicine + index.toString()),
+                  direction: DismissDirection.endToStart,
+                  background: Container(color: Color(0xFFFFFFFF)),
+                  onDismissed: (direction) {
+                    debugPrint("onDismissed $direction");
+                    if (direction == DismissDirection.endToStart) {
+                      AlarmDataBaseProvider.db.delete(alarm.id ?? -1).then((_) {
+                        BlocProvider.of<ReminderBloc>(context).add(
+                          DeleteAlarm(index),
+                        );
+                        cancelNotification(alarm.pushID);
+                      });
+                    }
+                  },
+                  child: Card(
+                    color:
+                        CupertinoDynamicColor.resolve(backGroundColor, context),
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0)),
+                    // color: const Color(0xFF1D1E33),
+                    child: ListTile(
+                      isThreeLine: true,
+                      contentPadding: EdgeInsets.all(16),
+                      title: Text("${alarm.medicine}",
+                          style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                              color: CupertinoDynamicColor.resolve(
+                                  textColor, context))),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${AppLocalization.of(context).translate('date')}: ${alarm.date}",
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: CupertinoDynamicColor.resolve(
+                                    textColor, context)),
+                          ),
+                          const SizedBox(
+                            height: 3,
+                          ),
+                          Text(
+                            "${AppLocalization.of(context).translate('dosage')}: ${alarm.dosage}\n${AppLocalization.of(context).translate('usage')}: ${alarm.state}",
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: CupertinoDynamicColor.resolve(
+                                    textColor, context)),
+                          ),
+                        ],
+                      ),
+                      trailing: _iconState,
+                      onLongPress: () => {
+                        _handleClickMe(context, index, alarm),
+                      },
                     ),
                   ),
-                ),
-              ];
-            },
-            body: MediaQuery.removePadding(
-              removeTop: true,
-              context: context,
-              child: Container(
-                padding: EdgeInsets.all(5.0),
-                child: BlocConsumer<ReminderBloc, List<AlarmDB>>(
-                  builder: (context, alarmList) {
-                    return ListView.builder(
-                      itemCount: alarmList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        AlarmDB alarm = alarmList[index];
-                        if (alarm.state == '口服') {
-                          _iconState = icons[0];
-                        } else if (alarm.state == '注射') {
-                          _iconState = icons[1];
-                        } else if (alarm.state == '外用') {
-                          _iconState = icons[2];
-                        } else {
-                          _iconState = icons[3];
-                        }
-                        return new Dismissible(
-                          key: new Key(alarm.medicine + index.toString()),
-                          direction: DismissDirection.endToStart,
-                          background: Container(
-                              color : Color(0xFFFFFFFF)
-                          ),
-                          onDismissed: (direction) {
-                            debugPrint("onDismissed $direction");
-                            if (direction == DismissDirection.endToStart) {
-                              AlarmDataBaseProvider.db
-                                  .delete(alarm.id ?? -1)
-                                  .then((_) {
-                                BlocProvider.of<ReminderBloc>(context).add(
-                                  DeleteAlarm(index),
-                                );
-                                cancelNotification(alarm.pushID);
-                              });
-                            }
-                          },
-                          child: Card(
-                            color: CupertinoDynamicColor.resolve(
-                                backGroundColor, context),
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0)),
-                            // color: const Color(0xFF1D1E33),
-                            child: ListTile(
-                              isThreeLine: true,
-                              contentPadding: EdgeInsets.all(16),
-                              title: Text("${alarm.medicine}",
-                                  style: TextStyle(
-                                      fontSize: 26,
-                                      fontWeight: FontWeight.bold,
-                                      color: CupertinoDynamicColor.resolve(
-                                          textColor, context))),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "${AppLocalization.of(context).translate('date')}: ${alarm.date}",
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: CupertinoDynamicColor.resolve(
-                                            textColor, context)),
-                                  ),
-                                  const SizedBox(
-                                    height: 3,
-                                  ),
-                                  Text(
-                                    "${AppLocalization.of(context).translate('dosage')}: ${alarm.dosage}\n${AppLocalization.of(context).translate('usage')}: ${alarm.state}",
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: CupertinoDynamicColor.resolve(
-                                            textColor, context)),
-                                  ),
-                                ],
-                              ),
-                              trailing: _iconState,
-                              onLongPress: () => {
-                                _handleClickMe(context, index, alarm),
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  listener: (BuildContext context, alarmList) {},
-                ),
-              ),
-            )));
+                );
+              },
+            );
+          },
+          listener: (BuildContext context, alarmList) {},
+        ),
+      ),
+    );
   }
 }

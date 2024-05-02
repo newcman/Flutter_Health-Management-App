@@ -154,7 +154,7 @@ class _OCRDetectState extends State<OCRDetect> {
                             _medicineTitle = '';
                             _medicineDosage = '';
                             _medicineUsage = '';
-                            if (_image == null && _medicineInput == null) {
+                            if (_image == null && _medicineInput.isEmpty) {
                               showDialog<void>(
                                   context: context,
                                   barrierDismissible:

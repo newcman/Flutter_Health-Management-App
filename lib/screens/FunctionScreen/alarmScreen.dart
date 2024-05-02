@@ -17,6 +17,7 @@ import 'package:bp_notepad/models/alarmModel.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:intl/intl.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AlarmScreen extends StatefulWidget {
   final String initialMedicineTitle;
@@ -82,10 +83,15 @@ class _AlarmScreenState extends State<AlarmScreen> {
   }
 
   // 通知推送组件
-  _showNotification() async {
+  Future _showNotification() async {
     // 组合一个新的DateTime
     final datetime = new DateTime(_selectedDate.year, _selectedDate.month,
         _selectedDate.day, _selectedDate.hour, _selectedDate.minute);
+    if (DateTime.now().isAfter(datetime)) {
+        Fluttertoast.showToast(msg: "设置的之间不能少于当前时间");
+        return false;
+    }
+
     // 获取通知日期，时间，内容
     List alarmList = await AlarmDataBaseProvider.db.getNotification();
     // 使用flutter_native_timezone 获取当前时区
@@ -119,6 +125,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
             UILocalNotificationDateInterpretation.absoluteTime,
         androidAllowWhileIdle: true);
     print(_pushID);
+    return true;
   }
 
   _selectDate() async {
@@ -326,10 +333,14 @@ class _AlarmScreenState extends State<AlarmScreen> {
                                           BlocProvider.of<ReminderBloc>(context)
                                               .add(AddAlarm(value)));
 
-                                  _showNotification();
-                                  int count = 0; //这里需要返回到前两个界面，所以要pop两次
-                                  Navigator.popUntil(
-                                      context, (route) => count++ >= 3);
+                                 _showNotification().then((value) {
+                                    if (value) {
+                                      int count = 0; //这里需要返回到前两个界面，所以要pop两次
+                                      Navigator.popUntil(
+                                          context, (route) => count++ >= 3);
+                                        }
+                                 });
+              
                                 },
                                 buttonTitle: AppLocalization.of(context)
                                     .translate('alarm_confirm_button'),
