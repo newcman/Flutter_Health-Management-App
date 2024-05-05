@@ -1,6 +1,6 @@
 /* 开屏主界面 */
 
-import 'package:bp_notepad/components/lineChart1.dart';
+import 'package:bp_notepad/components/bp_lineChart.dart';
 import 'package:bp_notepad/components/lineChart2.dart';
 import 'package:bp_notepad/components/lineChart3.dart';
 import 'package:bp_notepad/components/lineChart4.dart';
@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen>
             }),
       ),
       child: Container(
-              padding: EdgeInsets.all(5.0),
+              padding: EdgeInsets.only(left: 5.0,right: 5.0,top: 5.0,bottom: 0),
               child: ListView(
                 children: [
                   Column(

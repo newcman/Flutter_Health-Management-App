@@ -131,7 +131,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
             }),
       ),
       child: Container(
-        padding: EdgeInsets.all(5.0),
+        padding: EdgeInsets.only(left: 5.0,right: 5.0,top: 5.0,bottom: 0),
         child: BlocConsumer<ReminderBloc, List<AlarmDB>>(
           builder: (context, alarmList) {
             return ListView.builder(

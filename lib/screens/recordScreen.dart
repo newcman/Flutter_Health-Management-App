@@ -52,43 +52,50 @@ class RecordMeun extends StatelessWidget {
           middle: Text(AppLocalization.of(context).translate('record_tittle')),
         ),
         child: Container(
-            padding: EdgeInsets.all(5.0),
-            child: ListView.builder(
-              itemCount: pageRoutes.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
+          padding: EdgeInsets.all(50.0),
+          alignment: Alignment.bottomCenter,
+          child: GridView.builder(
+            shrinkWrap: true,
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 150.0,
+                mainAxisSpacing: 20.0,
+                childAspectRatio: 1.7,
+                crossAxisSpacing: 20.0),
+            itemCount: pageRoutes.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.white70, 
+                  borderRadius: BorderRadius.circular(10.0)
+                ),
+                child: GestureDetector(
                     child: Column(
-                  children: <Widget>[
-                    Card(
-                        color: CupertinoDynamicColor.resolve(
-                            backGroundColor, context),
-                        // elevation: 4.0, //Card的阴影
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
+                      children: [
+                        SizedBox(
+                          height: 5.0,
                         ),
-                        child: ListTile(
-                          leading: icons[index],
-                          title: Text(
-                            tittleTexts[index],
-                            style: TextStyle(
-                                color: CupertinoDynamicColor.resolve(
-                                    textColor, context),
-                                fontSize: 18),
-                          ),
-                          trailing: const Icon(
-                            CupertinoIcons.chevron_forward,
-                            color: Color(0xFF505054),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                    builder: (context) => pageRoutes[index]));
-                          },
-                        ))
-                  ],
-                ));
-              },
-            )));
+                        icons[index],
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Text(
+                          tittleTexts[index],
+                          style: TextStyle(
+                              color: CupertinoDynamicColor.resolve(
+                                  textColor, context),
+                              fontSize: 18),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) => pageRoutes[index]));
+                    }),
+              );
+            },
+          ),
+        ));
   }
 }

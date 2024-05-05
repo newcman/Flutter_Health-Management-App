@@ -187,7 +187,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                   Text(AppLocalization.of(context).translate('history_page'))),
           child: Container(
             padding:
-                EdgeInsets.only(right: 5.0, left:5.0, top: 75, bottom: 5.0),
+                EdgeInsets.only(right: 5.0, left:5.0, top: 75, bottom: 0.0),
             child: FutureBuilder(
                 future: getDatabaseEvent(),
                 builder: (context, snapshot) {

@@ -11,11 +11,11 @@
   "bmi_chart_tittle": "身体质量指数记录",
   "bf_chart_tittle": "体脂率",
   "bs_chart_subtittle": "显示平均值",
-  "bmi_Calc": "BMI计算器",
-  "bp_record": "记录血压",
-  "bs_record": "记录血糖",
+  "bmi_Calc": "BMI",
+  "bp_record": "血压",
+  "bs_record": "血糖",
   "stpes_record": "记录步数",
-  "sleep_record": "记录睡眠状况",
+  "sleep_record": "睡眠",
   "bp_history_checkout": "血压历史数据",
   "bs_history_checkout": "血糖历史数据",
   "bmi_history_checkout": "BMI&体脂率历史数据",
@@ -148,5 +148,9 @@
   "sleep_input_button1":"睡得不好",
   "sleep_input_button2":"睡得很好",
   "sleep_input_title":"睡眠时间",
-  "hour":"小时"
+  "hour":"小时",
+  "label_week": "周",
+  "label_month": "月",
+  "label_half_year": "半年",
+  "label_year": "年"
 }

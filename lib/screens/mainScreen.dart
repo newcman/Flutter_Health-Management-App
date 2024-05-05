@@ -1,11 +1,13 @@
 /* 界面控制器组件，主要控制页面切换效果和下面的选项卡菜单 */
 
 import 'package:bp_notepad/localization/appLocalization.dart';
+import 'package:bp_notepad/screens/meScreen.dart';
 import 'package:bp_notepad/screens/reminderScreen.dart';
 import 'package:bp_notepad/screens/historyScreen.dart';
 import 'package:bp_notepad/screens/homeScreen.dart';
 import 'package:bp_notepad/screens/recordScreen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key}) : super(key: key);
@@ -19,45 +21,66 @@ class _MyHomePageState extends State<MyHomePage> {
 
   static List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    RecordMeun(),
     ReminderScreen(),
+    RecordMeun(),
     HistoryScreen(),
+    MeScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoTabScaffold(
-        tabBar: CupertinoTabBar(
-          // backgroundColor:
-          //     CupertinoTheme.of(context).barBackgroundColor.withOpacity(0.8),
-          currentIndex: _selectedIndex,
-          onTap: (value) {
-            setState(() {
-              _selectedIndex = value;
-            });
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.heart_fill),
-              label: AppLocalization.of(context).translate('home_page'),
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.doc_chart),
-              label: AppLocalization.of(context).translate('function_page'),
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.alarm),
-              label: AppLocalization.of(context).translate('reminder_page'),
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.gobackward),
-              label: AppLocalization.of(context).translate('history_page'),
-            ),
-          ],
-        ),
-        tabBuilder: (context, i) {
-          return CupertinoPageScaffold(child: _widgetOptions[_selectedIndex]);
-        });
+    return Scaffold(
+      floatingActionButton: Builder(
+        builder: (context) {
+          return FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                _selectedIndex = 2;
+              });
+            },
+            child: Icon(Icons.add),
+            shape: CircleBorder(),
+          );
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+       body: _widgetOptions[_selectedIndex],
+      bottomNavigationBar: CupertinoTabBar(
+            // backgroundColor:
+            //     CupertinoTheme.of(context).barBackgroundColor.withOpacity(0.8),
+            currentIndex: _selectedIndex,
+            onTap: (value) {
+              setState(() {
+                _selectedIndex = value;
+              });
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: const Icon(CupertinoIcons.heart_fill),
+                label: AppLocalization.of(context).translate('home_page'),
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(CupertinoIcons.alarm),
+                label: AppLocalization.of(context).translate('reminder_page'),
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(CupertinoIcons.doc_fill,color: Colors.transparent,),
+                label: "",
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(CupertinoIcons.gobackward),
+                label: AppLocalization.of(context).translate('history_page'),
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(CupertinoIcons.person),
+                label: "我的",
+              ),
+            ],
+          ),
+          // tabBuilder: (context, i) {
+          //   return CupertinoPageScaffold(child: _widgetOptions[_selectedIndex]);
+          // }),
+    );
   }
 }
 
