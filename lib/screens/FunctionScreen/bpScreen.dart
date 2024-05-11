@@ -92,18 +92,20 @@ class _BloodPressureState extends State<BloodPressure> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(
+      child: Container(
         padding: EdgeInsets.all(5.0),
+        color: CupertinoDynamicColor.resolve(backGroundColor, context),
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: double.infinity),
           child: Column(
             children: <Widget>[
+              SizedBox(height: 20),
               Text("记录血压",style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: CupertinoDynamicColor.resolve(
-                  textColor, context)),
+              color: Colors.black),
           ),
+              SizedBox(height: 20),
               Container(
                 child: ReusableCard(
                   onPressed: () {
