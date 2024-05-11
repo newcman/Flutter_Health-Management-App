@@ -2,6 +2,7 @@
 
 import 'package:bp_notepad/db/bp_databaseProvider.dart';
 import 'package:bp_notepad/localization/appLocalization.dart';
+import 'package:bp_notepad/repo/chartTimeTitleRepo.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,9 @@ class _BPLineChartState extends State<BPLineChart> {
   static const double minx = 0;
   static const double maxx = 9;
 
-  int segmentedControlGroupValue = 7;
+
+  int segmentedControlGroupValue = TimeTitleRepo.WEEK;
+
 
   double sbpAvg = 0; //高压平均值
   double dbpAvg = 0; //低压平均值
@@ -27,6 +30,7 @@ class _BPLineChartState extends State<BPLineChart> {
   List<FlSpot> sbpSpotsData = [];
   List<FlSpot> dbpSpotsData = [];
   bool showAvg = false;
+
 
   //获得平均值的点
   List<FlSpot> getSBPAvgData() {
@@ -46,6 +50,56 @@ class _BPLineChartState extends State<BPLineChart> {
     return avgDBPSpotDatas;
   }
 
+  calculate(AsyncSnapshot snapshot) {
+    int showLength = 0;
+    int addLength = 0;
+    if ((snapshot.data?[0].length - segmentedControlGroupValue) > 0) {
+      showLength = snapshot.data?[0].length - segmentedControlGroupValue;
+      addLength = segmentedControlGroupValue;
+    } else {
+      addLength = snapshot.data?[0].length;
+    }
+    if (snapshot.data?[0].length >= 10) {
+      sbpSpotsData.clear();
+      dbpSpotsData.clear();
+      sbpAll = 0;
+      dbpAll = 0;
+      for (int x = 0; x < addLength; x++) {
+        // 获取最大值和最小值
+        if (snapshot.data?[0][x + showLength] > max) {
+          max = snapshot.data?[0][x + showLength];
+        } else if (snapshot.data?[1][x + showLength] < min) {
+          min = snapshot.data?[1][x + showLength];
+        }
+        sbpSpotsData.add(FlSpot(x.toDouble(), snapshot.data?[0][x + showLength].toDouble()));
+        // 加上最近十次的高压
+        sbpAll += snapshot.data?[0][x + showLength].toDouble();
+        dbpSpotsData.add(FlSpot(x.toDouble(), snapshot.data?[1][x + showLength].toDouble()));
+        // 加上最近十次的低压
+        dbpAll += snapshot.data?[1][x + showLength].toDouble();
+      }
+      sbpAvg = sbpAll / addLength;
+      dbpAvg = dbpAll / addLength;
+    } else {
+      if (sbpSpotsData.isEmpty && dbpSpotsData.isEmpty) {
+        for (int x = 0; x < snapshot.data?[0].length; x++) {
+          //获取最大值和最小值
+          if (snapshot.data?[0][x] > max) {
+            max = snapshot.data?[0][x];
+          } else if (snapshot.data?[1][x] < min) {
+            min = snapshot.data?[1][x];
+          }
+          sbpSpotsData.add((FlSpot(x.toDouble(), snapshot.data?[0][x].toDouble())));
+          sbpAll += snapshot.data?[0][x].toDouble();
+          dbpSpotsData.add((FlSpot(x.toDouble(), snapshot.data?[1][x].toDouble())));
+          dbpAll += snapshot.data?[1][x].toDouble();
+        }
+        sbpAvg = sbpAll / snapshot.data?[0].length;
+        dbpAvg = dbpAll / snapshot.data?[1].length;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
@@ -54,58 +108,7 @@ class _BPLineChartState extends State<BPLineChart> {
           future: BpDataBaseProvider.db.getGraphData(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              int showLength = 0;
-              int addLength = 0;
-              if ((snapshot.data?[0].length - segmentedControlGroupValue) > 0) {
-                showLength =
-                    snapshot.data?[0].length - segmentedControlGroupValue;
-                addLength = segmentedControlGroupValue;
-              } else {
-                addLength = snapshot.data?[0].length;
-              }
-              if (snapshot.data?[0].length >= 10) {
-                sbpSpotsData.clear();
-                dbpSpotsData.clear();
-                sbpAll = 0;
-                dbpAll = 0;
-                for (int x = 0; x < addLength; x++) {
-                  // 获取最大值和最小值
-                  if (snapshot.data?[0][x + showLength] > max) {
-                    max = snapshot.data?[0][x + showLength];
-                  } else if (snapshot.data?[1][x + showLength] < min) {
-                    min = snapshot.data?[1][x + showLength];
-                  }
-                  sbpSpotsData.add(FlSpot(x.toDouble(),
-                      snapshot.data?[0][x + showLength].toDouble()));
-                  // 加上最近十次的高压
-                  sbpAll += snapshot.data?[0][x + showLength].toDouble();
-                  dbpSpotsData.add(FlSpot(x.toDouble(),
-                      snapshot.data?[1][x + showLength].toDouble()));
-                  // 加上最近十次的低压
-                  dbpAll += snapshot.data?[1][x + showLength].toDouble();
-                }
-                sbpAvg = sbpAll / addLength;
-                dbpAvg = dbpAll / addLength;
-              } else {
-                if (sbpSpotsData.isEmpty && dbpSpotsData.isEmpty) {
-                  for (int x = 0; x < snapshot.data?[0].length; x++) {
-                    //获取最大值和最小值
-                    if (snapshot.data?[0][x] > max) {
-                      max = snapshot.data?[0][x];
-                    } else if (snapshot.data?[1][x] < min) {
-                      min = snapshot.data?[1][x];
-                    }
-                    sbpSpotsData.add(
-                        (FlSpot(x.toDouble(), snapshot.data?[0][x].toDouble())));
-                    sbpAll += snapshot.data?[0][x].toDouble();
-                    dbpSpotsData.add(
-                        (FlSpot(x.toDouble(), snapshot.data?[1][x].toDouble())));
-                    dbpAll += snapshot.data?[1][x].toDouble();
-                  }
-                  sbpAvg = sbpAll / snapshot.data?[0].length;
-                  dbpAvg = dbpAll / snapshot.data?[1].length;
-                }
-              }
+              calculate(snapshot);
               return Container(
                 decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(18)),
@@ -130,29 +133,21 @@ class _BPLineChartState extends State<BPLineChart> {
                             thumbColor: const Color(0xFF1d193a),
                             groupValue: segmentedControlGroupValue,
                             children: <int, Widget>{
-                              7: Text(
-                                AppLocalization.of(context)
-                                    .translate('label_week'),
-                                style: TextStyle(
-                                    color: CupertinoColors.systemGrey),
+                              TimeTitleRepo.WEEK: Text(
+                                AppLocalization.of(context).translate('label_week'),
+                                style: TextStyle(color: CupertinoColors.systemGrey),
                               ),
-                              30: Text(
-                                AppLocalization.of(context)
-                                    .translate('label_month'),
-                                style: TextStyle(
-                                    color: CupertinoColors.systemGrey),
+                              TimeTitleRepo.MONTH: Text(
+                                AppLocalization.of(context).translate('label_month'),
+                                style: TextStyle(color: CupertinoColors.systemGrey),
                               ),
-                              180: Text(
-                                AppLocalization.of(context)
-                                    .translate('label_half_year'),
-                                style: TextStyle(
-                                    color: CupertinoColors.systemGrey),
+                              TimeTitleRepo.HALF_YEAR: Text(
+                                AppLocalization.of(context).translate('label_half_year'),
+                                style: TextStyle(color: CupertinoColors.systemGrey),
                               ),
-                              360: Text(
-                                AppLocalization.of(context)
-                                    .translate('label_year'),
-                                style: TextStyle(
-                                    color: CupertinoColors.systemGrey),
+                              TimeTitleRepo.YEAR: Text(
+                                AppLocalization.of(context).translate('label_year'),
+                                style: TextStyle(color: CupertinoColors.systemGrey),
                               )
                             },
                             onValueChanged: (int? i) {
@@ -164,8 +159,7 @@ class _BPLineChartState extends State<BPLineChart> {
                           height: 4,
                         ),
                         Text(
-                          AppLocalization.of(context)
-                              .translate('bp_chart_tittle'),
+                          AppLocalization.of(context).translate('bp_chart_tittle'),
                           style: TextStyle(
                               color: const Color(0xFFFFFFFF),
                               fontSize: 36,
@@ -178,12 +172,10 @@ class _BPLineChartState extends State<BPLineChart> {
                         ),
                         Expanded(
                           child: Padding(
-                            padding:
-                                const EdgeInsets.only(right: 16.0, left: 6.0),
+                            padding: const EdgeInsets.only(right: 16.0, left: 6.0),
                             child: LineChart(
                               showAvg ? avgData() : mainData(),
-                              swapAnimationDuration:
-                                  const Duration(milliseconds: 250),
+                              swapAnimationDuration: const Duration(milliseconds: 250),
                             ),
                           ),
                         ),
@@ -200,14 +192,10 @@ class _BPLineChartState extends State<BPLineChart> {
                                   });
                                 },
                                 child: Text(
-                                  AppLocalization.of(context)
-                                      .translate('bs_chart_subtittle'),
+                                  AppLocalization.of(context).translate('bs_chart_subtittle'),
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: showAvg
-                                        ? const Color(0xFFFFFFFF)
-                                            .withOpacity(0.5)
-                                        : const Color(0xFFFFFFFF),
+                                    color: showAvg ? const Color(0xFFFFFFFF).withOpacity(0.5) : const Color(0xFFFFFFFF),
                                   ),
                                 ),
                               ),
@@ -231,6 +219,7 @@ class _BPLineChartState extends State<BPLineChart> {
   // }
   LineChartData mainData() {
     // getSpotData();
+    // ignore: sdk_version_constructor_tearoffs
     return LineChartData(
       lineTouchData: LineTouchData(
         touchTooltipData: LineTouchTooltipData(
@@ -246,30 +235,15 @@ class _BPLineChartState extends State<BPLineChart> {
         bottomTitles: SideTitles(
           showTitles: true,
           reservedSize: 22,
+          interval: 1,
           getTextStyles: (value) => const TextStyle(
             color: const Color(0xB3FFFFFF),
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
+            fontWeight: FontWeight.normal,
+            fontSize: 9,
           ),
           margin: 10,
           getTitles: (value) {
-            switch (value.toInt()) {
-              case 0:
-                return '1';
-              case 4:
-                return '5';
-              case 9:
-                return '10';
-              case 14:
-                return '15';
-              case 19:
-                return '20';
-              case 24:
-                return '25';
-              case 29:
-                return '30';
-            }
-            return '';
+            return TimeTitleRepo.getTitle(value.toInt(), segmentedControlGroupValue);
           },
         ),
         leftTitles: SideTitles(
@@ -395,8 +369,7 @@ class _BPLineChartState extends State<BPLineChart> {
           ),
           margin: 10,
           getTitles: (value) {
-            switch (value.toInt()) {
-            }
+            switch (value.toInt()) {}
             return '';
           },
         ),

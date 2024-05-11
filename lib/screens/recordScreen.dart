@@ -63,12 +63,11 @@ class RecordMeun extends StatelessWidget {
                 crossAxisSpacing: 20.0),
             itemCount: pageRoutes.length,
             itemBuilder: (BuildContext context, int index) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: Colors.white70, 
-                  borderRadius: BorderRadius.circular(10.0)
-                ),
-                child: GestureDetector(
+              return GestureDetector(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white70,
+                        borderRadius: BorderRadius.circular(10.0)),
                     child: Column(
                       children: [
                         SizedBox(
@@ -87,13 +86,17 @@ class RecordMeun extends StatelessWidget {
                         ),
                       ],
                     ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (context) => pageRoutes[index]));
-                    }),
-              );
+                  ),
+                  onTap: () {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Container(
+                            height: 500.0,
+                            child: pageRoutes[index],
+                          );
+                        });
+                  });
             },
           ),
         ));
